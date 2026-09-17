@@ -8,7 +8,7 @@ A centralized, production-grade repository mapping out deep technical competenci
 * **`system-design/`** — Architectural breakdowns, high-availability strategies, and real-world microservices case studies.
 * **`frameworks-and-runtimes/`** — Production-ready boilerplates, API performance tuning, and idiomatic backend execution.
 * **`continuous-learning/`** — Research and development logs on cutting-edge systems, including Agentic AI frameworks and autonomous orchestration.
-* **`localization/`** — Technical language synthesis focusing on cross-border engineering communication and professional localization (G11n).
+* **`cross-border-engineering/`** — Japanese technical lexicon and terminology resources for engineering communication.
 
 ---
 
