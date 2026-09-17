@@ -1,0 +1,6 @@
+Module 5: Multi-Agent Systems
+
+Notes:
+- Collaboration patterns among agents.
+- Coordination, delegation, and verification.
+- Key takeaways from the lesson.

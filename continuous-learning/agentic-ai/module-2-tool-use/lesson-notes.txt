@@ -1,0 +1,6 @@
+Module 2: Tool Use
+
+Notes:
+- How agents use tools effectively.
+- Tool calling patterns and constraints.
+- Key takeaways from the lesson.

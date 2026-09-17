@@ -1,1 +1,11 @@
-term,reading,meaning
+date,japanese,reading,english,example_sentence
+2026-09-17,要件定義,ようけんていぎ,Requirements definition,要件定義をしっかり行う。
+2026-09-17,設計,せっけい,Design,システムの設計を始めます。
+2026-09-17,実装,じっそう,Implementation,機能の実装が完了しました。
+2026-09-17,テスト,テスト,Test,単体テストを実行する。
+2026-09-17,デプロイ,デプロイ,Deploy,本番環境にデプロイします。
+2026-09-17,障害,しょうがい,Failure / Incident,障害が発生しました。
+2026-09-17,保守,ほしゅ,Maintenance,システムの保守を行う。
+2026-09-17,開発,かいはつ,Development,新機能を開発中です。
+2026-09-17,仕様,しよう,Specification,仕様書を確認してください。
+2026-09-17,納品,のうひん,Delivery,来週納品予定です。

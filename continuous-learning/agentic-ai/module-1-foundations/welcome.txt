@@ -1,0 +1,80 @@
+Agentic AI হলো এমন একটি AI system, যা শুধু একটি প্রশ্নের উত্তর দেয় না; বরং একটি বড় বা 
+complex task-কে কয়েকটি ছোট ধাপে ভাগ করে, প্রয়োজন অনুযায়ী tool ব্যবহার করে, 
+ফলাফল পরীক্ষা করে, এবং প্রয়োজন হলে আবার কাজ করে final result তৈরি করতে পারে।
+
+## 1) Agentic AI কী?
+
+সাধারণ LLM application সাধারণত এই ধাঁচে কাজ করে:
+
+User → Prompt → LLM → Answer
+
+কিন্তু Agentic AI-তে workflow হয়:
+
+User Request → Task Understanding → Planning → Tool Use → Analysis → 
+Evaluation → Final Answer
+
+### Example
+
+যদি আপনি বলেন:
+
+“Tokyo-তে Python backend-এর ভালো চাকরি খুঁজে requirements-এর summary তৈরি করো”
+
+তখন একটি agent:
+- আপনার requirement বুঝবে
+- job website-এ search করবে
+- relevant jobs filter করবে
+- requirements সংগ্রহ করবে
+- সেগুলো analyse করবে
+- summary তৈরি করবে
+- result ঠিক আছে কি না check করবে
+
+এই ধরনের multi-step process-কে agentic workflow বলা হয়।
+
+## 2) Evals এবং Error Analysis
+
+এই lesson-এর গুরুত্বপূর্ণ বিষয় হলো Evals এবং Error Analysis।
+
+### Evals
+
+Evals বা evaluations ব্যবহার করে আমরা বুঝতে পারি agent কতটা ভালো কাজ করছে।
+
+উদাহরণ:
+- 100টি task-এর মধ্যে 80টি সঠিক হলে performance 80%
+
+### Error Analysis
+
+Error Analysis হলো agent যে ভুলগুলো করেছে, সেগুলো কেন ভুল করেছে তা খুঁজে বের করা।
+
+উদাহরণ:
+- ভুল tool নির্বাচন করেছে
+- ভুল information ব্যবহার করেছে
+- workflow-এর কোনো step ঠিকভাবে করেনি
+
+## 3) Development cycle
+
+Agentic AI development-এর গুরুত্বপূর্ণ cycle হলো:
+
+Build → Evaluate → Analyze Errors → Improve → Evaluate Again
+
+## 4) Interview-style answer
+
+### Q: What is Agentic AI?
+
+Agentic AI refers to AI systems that can perform multi-step tasks by reasoning 
+about the task, using tools, and executing workflows to achieve a goal.
+
+### Q: Why are evals important?
+
+Evals help us measure an agent’s performance, identify failures, and 
+systematically improve the agent.
+
+## 5) Main takeaway
+
+Agentic AI complex task-এর জন্য multi-step workflow ব্যবহার করে।
+- agent প্রয়োজন অনুযায়ী tools ব্যবহার করতে পারে
+- Evals দিয়ে performance measure করা হয়
+- Error Analysis দিয়ে failure-এর কারণ বের করা হয়
+- ভালো agent বানানোর জন্য বারবার evaluate ও improve করতে হয়
+
+এই lesson থেকে মনে রাখবেন:
+Agentic AI মানে হলো reasoning + tool use + workflow execution + evaluation + iteration।

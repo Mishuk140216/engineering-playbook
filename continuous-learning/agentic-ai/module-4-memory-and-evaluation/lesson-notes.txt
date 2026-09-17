@@ -1,0 +1,6 @@
+Module 4: Memory and Evaluation
+
+Notes:
+- Memory patterns and context retention.
+- Evaluation methods for agent performance.
+- Key takeaways from the lesson.
