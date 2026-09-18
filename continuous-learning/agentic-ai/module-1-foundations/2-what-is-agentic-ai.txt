@@ -1,0 +1,123 @@
+সহজভাবে বললে, Agentic AI হলো এমন একটি AI application যেখানে LLM একটি বড় কাজকে 
+একবারে উত্তর দেওয়ার বদলে কয়েকটি ছোট ধাপে ভাগ করে ধাপে ধাপে কাজ সম্পন্ন করে।
+
+## 1) Single prompt বনাম Agentic workflow
+
+সাধারণভাবে আমরা LLM-কে বলি:
+
+“এই topic-এর উপর একটি essay লিখো”
+
+তখন AI শুরু থেকে শেষ পর্যন্ত একবারে essay তৈরি করার চেষ্টা করে। কিন্তু মানুষ কীভাবে কাজ করে?
+
+আমরা আগে:
+- topic নিয়ে চিন্তা করি
+- outline তৈরি করি
+- research করি
+- প্রথম draft লিখি
+- ভুল বা দুর্বল অংশ খুঁজে বের করি
+- প্রয়োজন হলে আরও research করি
+- revise করি
+
+Agentic workflow ঠিক এই iterative পদ্ধতিটিই AI application-এর মধ্যে ব্যবহার করে।
+
+## 2) Example: research agent
+
+যেমন, যদি বলা হয়:
+
+“SpaceX-এর সঙ্গে প্রতিযোগিতা করার জন্য কীভাবে একটি rocket company তৈরি করা যায়?”
+
+একটি research agent তখন এই ধাপগুলো অনুসরণ করতে পারে:
+
+1. research plan তৈরি
+2. web search engine/API ব্যবহার করে তথ্য সংগ্রহ
+3. information analyse ও synthesize
+4. findings-এর গুরুত্ব অনুযায়ী rank
+5. report-এর outline তৈরি
+6. draft তৈরি
+7. editor/another agent দিয়ে review করানো
+8. final report তৈরি
+
+এখানে LLM শুধু text generator হিসেবে কাজ করছে না; বরং planning, research, tool ব্যবহার, analysis, writing, review, এবং revision-এর মধ্যে কাজ করছে।
+
+## 3) Why Agentic workflow is powerful
+
+Agentic workflow সাধারণ single-prompt approach-এর চেয়ে অনেক বেশি powerful হতে পারে, কারণ:
+
+- task-কে ছোট ছোট step-এ ভাগ করা যায়
+- tool ব্যবহার করা যায়
+- intermediate output-গুলো review করা যায়
+- ভুল ধাপ ধরে ধরে fix করা যায়
+- output quality বাড়ে
+
+তবে এটি সাধারণত বেশি time এবং computation নেয়।
+
+## 4) Key skill: Task Decomposition
+
+এই lesson-এর সবচেয়ে গুরুত্বপূর্ণ skill হলো task decomposition।
+
+একটি complex task-কে ছোট ছোট manageable steps-এ ভাগ করতে হয়।
+
+উদাহরণ:
+
+“research report তৈরি করো”
+
+এটিকে এইভাবে ভাগ করা যায়:
+
+Planning → Web Search → Information Collection → Analysis → Outline → Draft → 
+Review → Revision → Final Report
+
+প্রতিটি step ভালোভাবে design করা গুরুত্বপূর্ণ, কারণ কোনো একটি step দুর্বল হলে পুরো output-এর quality 
+কমে যেতে পারে।
+
+## 5) Human-in-the-loop
+
+আরেকটি গুরুত্বপূর্ণ বিষয় হলো human-in-the-loop।
+
+সব কাজ agent-এর হাতে পুরোপুরি ছেড়ে দিতে হবে এমন নয়।
+
+কখনও কখনও:
+- গুরুত্বপূর্ণ fact যাচাই করতে হয়
+- সিদ্ধান্ত নেওয়ার ক্ষেত্রে human supervision লাগে
+- risky বা ambiguous step-এ human intervention প্রয়োজন হয়
+
+## 6) Main takeaway
+
+Agentic AI মানে হলো:
+
+- বড় কাজকে ছোট ধাপে ভাগ করা
+- step-by-step workflow তৈরি করা
+- প্রয়োজন অনুযায়ী tool ব্যবহার করা
+- output review ও improve করা
+- শেষে মানুষের supervision বা feedback-সহ final result তৈরি করা
+
+এই পদ্ধতি AI systems-কে আরও capable, structured, এবং production-friendly করে তোলে।র জন্য 
+একজন মানুষ review করতে পারে এবং তারপর agent সেই feedback ব্যবহার করে কাজ চালিয়ে যেতে পারে। 
+এখানে autonomy বা agent কতটা নিজে নিজে সিদ্ধান্ত নিয়ে কাজ করতে পারে সেটিও গুরুত্বপূর্ণ; 
+কিছু workflow খুব simple এবং কম autonomous হতে পারে, আবার কিছু workflow অনেক বেশি 
+autonomous হয়ে research, tool calling, evaluation এবং revision নিজেরাই করতে পারে। 
+
+Interview-এর জন্য মনে রাখবেন: 
+Agentic AI = multi-step task execution using LLM-based workflows; 
+Agentic workflow = complex task-কে multiple steps-এ ভাগ করে sequential/iterativeভাবে execute করা; 
+Task decomposition = বড় task-কে ছোট actionable steps-এ ভাঙা; 
+Tool use = agent-এর প্রয়োজন অনুযায়ী web search/API/database ইত্যাদি ব্যবহার করা; 
+Human-in-the-loop = প্রয়োজনীয় জায়গায় মানুষের review বা decision যুক্ত করা; 
+Autonomy = agent কতটা independently কাজ করতে পারে। 
+
+সবচেয়ে গুরুত্বপূর্ণ mental model হলো: 
+Simple LLM → Prompt → Answer, 
+কিন্তু Agentic AI → Goal → Plan → Act/Use Tools → Observe → Review → Revise → Final Result। 
+বাস্তব উদাহরণ হিসেবে একটি job research agent ভাবতে পারেন: 
+আপনি বললেন “Tokyo-তে Python backend jobs-এর research report তৈরি করো”; 
+agent প্রথমে requirement বুঝবে, 
+job websites search করবে, 
+relevant jobs collect করবে, 
+requirements analyse করবে, 
+jobs-এর information compare করবে, 
+report লিখবে, 
+তারপর result review করে final report দেবে। 
+
+অর্থাৎ Agentic AI-এর শক্তি শুধু LLM কত ভালো উত্তর লিখতে পারে তার মধ্যে নয়; 
+বরং কীভাবে একটি complex problem-কে ভালোভাবে ভেঙে, একাধিক ধাপে 
+LLM, tools, evaluation এবং human feedback ব্যবহার করে আরও ভালো final output তৈরি করা যায়—
+সেটাই Agentic AI-এর মূল শক্তি।

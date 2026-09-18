@@ -1,0 +1,68 @@
+এই lesson-এর মূল কথা হলো Agentic Workflow বানানোর পর তার output পরীক্ষা করে ভুল খুঁজে বের করা এবং তারপর workflow improve করা।
+
+শুরুতেই সব ভুল জানা সম্ভব নয়। তাই আগে workflow বানাতে হবে, তারপর অনেকগুলো output দেখে দেখতে হবে কোথায় সমস্যা হচ্ছে।
+
+উদাহরণ: একটি customer-service AI বানালেন। পরে দেখলেন AI মাঝে মাঝে অন্য কোম্পানির নাম বলছে, যা আপনি চান না।
+
+তখন এটাকে একটি error হিসেবে ধরলেন এবং measure করা শুরু করলেন:
+
+100 responses
+↓
+10 responses-এ অন্য কোম্পানির নাম এসেছে
+↓
+Error rate = 10%
+
+এটা objective evaluation, কারণ খুব সহজে check করা যায়:
+
+Competitor name mentioned?
+YES / NO
+
+এখানে কোনো মানুষের opinion দরকার নেই।
+
+কিন্তু যদি প্রশ্ন হয়:
+
+"এই AI-এর উত্তরটি কি ভালোভাবে লেখা হয়েছে?"
+
+এটার নির্দিষ্ট Yes/No answer নেই। তাই অন্য একটি LLM-কে judge হিসেবে ব্যবহার করা যায়।
+
+AI-generated answer
+        ↓
+Another LLM (Judge)
+        ↓
+Evaluate the answer
+
+Andrew Ng বলছেন, শুধু 1–5 score দিতে বললে LLM সবসময় খুব reliable হয় না। পরে course-এ আরও ভালো evaluation techniques দেখানো হবে।
+
+আর দুই ধরনের গুরুত্বপূর্ণ eval আছে:
+
+End-to-end eval → পুরো agent-এর final result কেমন?
+
+Component-level eval → workflow-এর একটি নির্দিষ্ট step কেমন করছে?
+
+আর Error Analysis মানে হলো workflow-এর মাঝের প্রতিটি step-এর output বা trace দেখে manually বোঝা:
+
+"কোথায় এবং কীভাবে ভুল হচ্ছে?"
+
+সবশেষে পুরো process:
+
+Build Agent
+    ↓
+Check Outputs
+    ↓
+Find Errors
+    ↓
+Create Evals
+    ↓
+Improve Agent
+    ↓
+Evaluate Again
+
+সহজভাবে মনে রাখুন:
+
+Eval = Agent কত ভালো করছে তা মাপা।
+
+Error Analysis = Agent কোথায় ভুল করছে তা খুঁজে বের করা।
+
+Objective = পরিষ্কারভাবে check করা যায়।
+
+Subjective = মানুষের/LLM-এর judgment দরকার।

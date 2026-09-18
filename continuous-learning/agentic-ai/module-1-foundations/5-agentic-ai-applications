@@ -1,0 +1,237 @@
+এই lesson-এ মূলত Agentic AI কোথায় ব্যবহার করা যায়
+এবং কোন ধরনের কাজ Agent-এর জন্য সহজ বা কঠিন—
+এটা বোঝানো হয়েছে।
+
+Agentic AI-এর একটি গুরুত্বপূর্ণ application হলো invoice processing।
+
+যেমন একটি invoice থেকে biller-এর নাম, address, amount due
+এবং due date বের করে database-এ save করা যায়।
+
+এর workflow হতে পারে:
+
+Invoice PDF
+→ PDF-to-Text API
+→ LLM checks whether it is an invoice
+→ Extract important fields
+→ Database update
+
+এখানে process আগে থেকেই পরিষ্কার এবং step-by-step,
+তাই এই ধরনের কাজ Agentic AI দিয়ে করা তুলনামূলকভাবে সহজ এবং reliable।
+
+আরেকটি example হলো customer order inquiry।
+
+Customer যদি জিজ্ঞেস করে “আমার order-এর status কী?”,
+Agent প্রথমে email থেকে customer name এবং order details extract করবে।
+
+তারপর order database থেকে information বের করবে,
+এরপর সেই information ব্যবহার করে response draft করবে
+এবং প্রয়োজন হলে human review-এর জন্য পাঠাবে।
+
+এটিও তুলনামূলকভাবে সহজ কারণ workflow আগে থেকেই জানা:
+
+Extract
+→ Database Lookup
+→ Draft Response
+→ Human Review
+
+আরও challenging হলো এমন customer service agent,
+যেখানে customer যেকোনো ধরনের প্রশ্ন করতে পারে।
+
+যেমন customer যদি বলে,
+“আমার জন্য black jeans এবং blue jeans আছে কি?”
+
+Agent-কে প্রথমে বুঝতে হবে কী information দরকার।
+তারপর black jeans-এর inventory এবং blue jeans-এর inventory
+আলাদাভাবে check করতে হবে এবং তারপর answer দিতে হবে।
+
+এখানে সবচেয়ে গুরুত্বপূর্ণ পার্থক্য হলো,
+প্রয়োজনীয় steps আগে থেকে সম্পূর্ণ জানা নেই।
+Agent-কে নিজেই plan করতে হচ্ছে কোন step আগে
+এবং কোন step পরে করতে হবে।
+
+আরও complex example হলো customer বলল,
+“আমি যে beach towel কিনেছি সেটা return করতে চাই।”
+
+Agent-কে প্রথমে verify করতে হবে customer সত্যিই towel কিনেছিল কি না।
+তারপর purchase date check করতে হবে এবং return policy দেখতে হবে।
+
+এছাড়া purchaseটি 30 দিনের মধ্যে আছে কি না
+এবং product unused কি না verify করতে হবে।
+
+Return allowed হলে packing slip তৈরি করতে হবে
+এবং database-এ return status update করতে হবে।
+
+অর্থাৎ এখানে Agent-কে multiple decisions এবং tool calls করতে হচ্ছে।
+
+আরও advanced এবং challenging application হলো computer-use agents।
+
+এখানে Agent শুধু API বা database ব্যবহার করছে না;
+বরং browser-এর মাধ্যমে মানুষের মতো website navigate করতে পারে।
+
+যেমন:
+- webpage পড়া
+- button click করা
+- text field-এ information লেখা
+- search করা
+
+উদাহরণ হিসেবে flight availability check করার সময়
+Agent একটি airline website-এ গিয়ে প্রয়োজনীয় information enter করতে পারে।
+
+এটি website-এর content analyse করতে পারে
+এবং সমস্যা হলে অন্য website,
+যেমন flight search service-এ গিয়ে information খুঁজতে পারে।
+
+তবে computer-use agents এখনও সবসময় reliable নয়।
+
+Website slow হলে Agent বুঝতে সমস্যা করতে পারে।
+Webpage-এর layout পরিবর্তন হলে ভুল করতে পারে,
+বা কোনো page সঠিকভাবে read করতে নাও পারে।
+
+তাই mission-critical কাজের ক্ষেত্রে
+এই ধরনের highly autonomous computer-use agent এখনও challenging।
+
+এই lesson-এর একটি খুব গুরুত্বপূর্ণ ধারণা হলো
+কোন কাজ Agent-এর জন্য সহজ আর কোন কাজ কঠিন।
+
+সাধারণত যেসব task-এর clear step-by-step process আছে
+এবং business-এ আগে থেকেই একটি standard procedure বা SOP আছে,
+সেগুলো Agentic workflow-এ implement করা তুলনামূলকভাবে সহজ।
+
+কারণ developer সেই existing procedure-কে workflow হিসেবে codify করতে পারে।
+
+যেমন:
+
+Invoice Processing
+
+Invoice
+  ↓
+Extract Text
+  ↓
+Identify Invoice
+  ↓
+Extract Fields
+  ↓
+Update Database
+  ↓
+Done
+
+অন্যদিকে যদি task-এর steps আগে থেকে জানা না থাকে
+এবং Agent-কে পরিস্থিতি অনুযায়ী নিজেই decide করতে হয়,
+তাহলে system বেশি unpredictable এবং less reliable হতে পারে।
+
+আরেকটি গুরুত্বপূর্ণ factor হলো input modality।
+
+যদি input শুধুই text হয়,
+তাহলে Agent সাধারণত সহজে process করতে পারে,
+কারণ LLM মূলত text processing-এর জন্য তৈরি।
+
+কিন্তু input যদি image, audio, video
+বা অন্য ধরনের multimodal data হয়,
+তাহলে workflow আরও complex হতে পারে
+এবং reliability কমতে পারে।
+
+তাই task-এর difficulty বোঝার সময় দুটি বিষয় বিশেষভাবে মনে রাখবেন:
+
+1. Steps আগে থেকে পরিষ্কার কি না
+2. Input text-only নাকি multimodal
+
+সহজভাবে difficulty spectrum মনে রাখতে পারেন:
+
+Easier
+  ↓
+Clear predefined steps
+  ↓
+Text-based input
+  ↓
+Known tools/APIs
+  ↓
+More reliable
+
+Harder
+  ↓
+Steps unknown beforehand
+  ↓
+Agent must plan
+  ↓
+Multiple decisions
+  ↓
+Multimodal input
+  ↓
+Computer/browser use
+  ↓
+More unpredictable
+
+এই lesson-এর Important Terminology:
+
+- Invoice Processing = invoice থেকে প্রয়োজনীয় information extract করে process করা
+- Workflow = task সম্পন্ন করার জন্য ধারাবাহিক steps
+- SOP (Standard Operating Procedure) = business-এর predefined standard process
+- Tool Use = Agent-এর মাধ্যমে API, database, search engine বা অন্য software ব্যবহার করা
+- Task Planning = task সম্পন্ন করার জন্য কী কী steps দরকার তা নির্ধারণ করা
+- Human-in-the-loop = গুরুত্বপূর্ণ জায়গায় মানুষের review বা approval যুক্ত করা
+- Computer Use Agent = browser বা computer interface মানুষের মতো ব্যবহার করে task সম্পন্ন করা
+- Multimodal = text-এর পাশাপাশি image, audio, video ইত্যাদি input process করা
+
+Interview-এর জন্য সবচেয়ে গুরুত্বপূর্ণ প্রশ্ন হতে পারে:
+
+“What types of tasks are easier for agentic workflows?”
+
+উত্তর:
+“Tasks with a clear, step-by-step process and well-defined business procedures
+are generally easier to implement reliably with agentic workflows.”
+
+আরেকটি প্রশ্ন হতে পারে:
+
+“What makes an agentic task more difficult?”
+
+উত্তর:
+“Tasks become more challenging when the steps are not known beforehand,
+the agent needs to plan dynamically,
+or the system needs to process multimodal inputs
+or interact with computer interfaces.”
+
+একটি practical example হিসেবে
+আপনার software development experience-এর সঙ্গে মিলিয়ে
+AI bug-fixing agent ভাবতে পারেন।
+
+সহজ version:
+
+Bug Report
+   ↓
+Read Error
+   ↓
+Find Related Code
+   ↓
+Suggest Fix
+   ↓
+Run Test
+   ↓
+Final Result
+
+যদি workflow predefined থাকে,
+এটি তুলনামূলকভাবে সহজ।
+
+কিন্তু advanced version-এ Agent নিজেই decide করবে:
+- কোন file inspect করবে
+- কোন test run করবে
+- error দেখে কী পরিবর্তন করবে
+- আরও investigation দরকার কি না
+- কখন final solution তৈরি করবে
+
+তখন এটি অনেক বেশি autonomous এবং challenging হবে।
+
+সবশেষে সবচেয়ে গুরুত্বপূর্ণ শিক্ষা হলো:
+
+Agentic AI বানানোর সময় প্রথমে task-টিকে দেখুন
+এবং জিজ্ঞেস করুন—
+“এই কাজটি করার steps কি আগে থেকেই পরিষ্কার?”
+
+যদি পরিষ্কার থাকে,
+তাহলে সেই process-কে workflow হিসেবে codify করা সহজ।
+
+যদি পরিষ্কার না থাকে,
+তাহলে Agent-কে planning এবং decision-making করতে দিতে হবে।
+এটি বেশি powerful হলেও বেশি complex এবং unpredictable।
+
+আর এই lesson-এর পরের গুরুত্বপূর্ণ skill হলো Task Decomposition—
+অর্থাৎ একটি বড় complex task-কে কীভাবে ছোট ছোট discrete steps-এ ভাঙা যায়।

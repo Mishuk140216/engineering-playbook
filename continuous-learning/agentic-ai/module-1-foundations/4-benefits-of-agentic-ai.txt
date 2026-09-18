@@ -1,0 +1,145 @@
+Agentic AI workflow-এর সবচেয়ে বড় সুবিধা হলো
+এটি এমন অনেক complex task কার্যকরভাবে করতে পারে,
+যেগুলো সাধারণভাবে শুধু একটি prompt দিয়ে করা কঠিন
+বা আগের generation-এর AI দিয়ে সম্ভব ছিল না।
+
+উদাহরণ হিসেবে coding benchmark HumanEval-এর কথা বলা হয়েছে।
+GPT-3.5 যদি সরাসরি code লিখতে বলা হয়,
+তাহলে benchmark-এ প্রায় 40% task সঠিকভাবে করতে পারে,
+আর GPT-4 সরাসরি ব্যবহার করলে performance প্রায় 67% হয়।
+
+কিন্তু GPT-3.5-কে একটি agentic workflow-এর মধ্যে ব্যবহার করলে,
+যেমন প্রথমে code generate করা,
+তারপর নিজের code review বা reflection করা,
+ভুল খুঁজে বের করা এবং improve করা—
+তাহলে performance অনেক বেশি বাড়তে পারে।
+
+অর্থাৎ শুধু আরও powerful LLM ব্যবহার করলেই performance বাড়ে না;
+একটি ভালো workflow তৈরি করেও একই LLM-এর performance অনেক উন্নত করা যায়।
+
+এমনকি বর্তমানের ভালো LLM-এর ক্ষেত্রেও agentic workflow ব্যবহার করলে
+আরও ভালো result পাওয়া যেতে পারে।
+
+আরেকটি বড় সুবিধা হলো parallelism।
+কিছু কাজ মানুষকে একটির পর একটি sequentially করতে হয়,
+কিন্তু Agentic AI একই সময়ে একাধিক independent কাজ করতে পারে।
+
+যেমন black holes নিয়ে research করার সময়
+৩টি LLM একই সময়ে বিভিন্ন search query তৈরি করতে পারে,
+তারপর প্রতিটি search থেকে কয়েকটি relevant webpage নির্বাচন করা হলে
+৯টি webpage একসাথে download করা যেতে পারে।
+
+একজন মানুষ হয়তো ৯টি webpage একটির পর একটি খুলে পড়বেন,
+কিন্তু software system independent downloads-গুলো parallelভাবে করতে পারে।
+
+তাই agentic workflow পুরো workflow-কে সবসময় দ্রুত করে না—
+কারণ planning, reasoning এবং multiple LLM calls-এর কারণে
+এটি single prompt-এর চেয়ে বেশি সময়ও নিতে পারে—
+কিন্তু যেসব কাজ parallel করা সম্ভব,
+সেগুলো parallel করে human-এর sequential process-এর তুলনায়
+অনেক দ্রুত কাজ শেষ করতে পারে।
+
+আরেকটি গুরুত্বপূর্ণ সুবিধা হলো modularity।
+Agentic workflow-কে অনেকটা LEGO blocks-এর মতো ভাবতে পারেন।
+
+Workflow-এর একটি component পরিবর্তন করে অন্য component ব্যবহার করা যায়,
+পুরো system নতুন করে তৈরি করতে হয় না।
+
+যেমন research agent-এর web search-এর জন্য একটি search engine ব্যবহার করছেন;
+পরে চাইলে Google, Bing, DuckDuckGo, Tavily
+বা অন্য কোনো search service দিয়ে সেই component replace করতে পারেন।
+
+আবার recent news-এর জন্য সাধারণ web search-এর পরিবর্তে
+dedicated news search engine ব্যবহার করতে পারেন।
+
+একইভাবে workflow-এর প্রতিটি step-এ একই LLM ব্যবহার করতেই হবে এমন নয়।
+একটি step-এর জন্য GPT model ভালো result দিতে পারে,
+অন্য step-এর জন্য অন্য কোনো LLM বা provider ভালো হতে পারে।
+
+তাই প্রয়োজন অনুযায়ী different models, tools এবং APIs
+combine বা replace করা যায়।
+
+সহজভাবে Agentic AI workflow-এর তিনটি বড় সুবিধা মনে রাখতে পারেন:
+
+1. Better Performance
+   ↓
+   Multiple steps + reflection + improvement
+   ↓
+   Better final result
+
+2. Parallelism
+   ↓
+   Independent tasks run at the same time
+   ↓
+   Faster execution for suitable tasks
+
+3. Modularity
+   ↓
+   Swap / add / update tools and models
+   ↓
+   Flexible system
+
+এখানে Performance improvement-এর মূল ধারণা হলো,
+একটি LLM-কে একবারে final answer দিতে বাধ্য না করে
+তাকে intermediate steps করতে দেওয়া—
+যেমন generate → review → improve।
+
+Parallelism মানে independent কাজগুলো একই সময়ে execute করা।
+
+Modularity মানে workflow-এর বিভিন্ন component আলাদা রাখা,
+যাতে প্রয়োজন অনুযায়ী একটি tool বা model অন্যটি দিয়ে replace করা যায়।
+
+একটি practical example হিসেবে আপনার জন্য একটি AI coding agent ধরতে পারেন।
+User বলল, “এই Python API-তে authentication যোগ করো।”
+
+Agent একবারে code লিখে শেষ না করে
+প্রথমে existing code analyse করবে,
+তারপর implementation plan করবে,
+code পরিবর্তন করবে,
+tests লিখবে,
+tests run করবে,
+error হলে fix করবে,
+এবং শেষে আবার test করবে।
+
+User Request
+     ↓
+Analyze existing code
+     ↓
+Create implementation plan
+     ↓
+Write code
+     ↓
+Run tests ──────────┐
+     ↓              │
+Test failed? ── Yes ┘
+     ↓
+Fix code
+     ↓
+Run tests again
+     ↓
+Final result
+
+এখানে agentic workflow সাধারণ LLM-এর তুলনায়
+বেশি reliable result দিতে পারে,
+কারণ AI শুধু code generate করছে না;
+নিজের কাজ পরীক্ষা করে প্রয়োজন হলে improve করছে।
+
+Interview-এর জন্য বলতে পারেন:
+“One major benefit of agentic workflows is improved performance through
+multi-step reasoning, reflection, and iteration.
+They can also parallelize independent tasks,
+which can improve execution speed,
+and their modular architecture allows us to swap or add different tools and models.”
+
+আরও সহজ interview version:
+“Agentic workflows are powerful because they can improve the quality of an LLM's output,
+execute independent tasks in parallel,
+and combine different tools and models in a modular way.”
+
+সবচেয়ে গুরুত্বপূর্ণভাবে মনে রাখবেন:
+একটি ভালো agentic workflow কখনও কখনও
+একটি আরও powerful LLM-এর চেয়েও বড় performance improvement দিতে পারে।
+
+আর Agentic AI-এর power শুধু “AI নিজে নিজে কাজ করে” এর মধ্যে নয়;
+workflow design + iteration + parallelism + tool/model modularity—
+এই চারটি বিষয় একসাথে system-কে powerful করে।

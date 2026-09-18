@@ -1,0 +1,76 @@
+এই lesson-এ Agentic Workflow-এর ৪টি গুরুত্বপূর্ণ Design Pattern বুঝিয়েছেন।
+
+এগুলো হলো workflow-এর building blocks কীভাবে একসাথে ব্যবহার করা যায়,
+তার common patterns।
+
+1. Reflection
+
+AI প্রথমে কিছু তৈরি করে, তারপর নিজের output পরীক্ষা করে, ভুল খুঁজে আবার improve করে।
+
+Generate code → Review code → Find problems → Fix code → Better code
+
+এখানে একই LLM নিজেকে review করতে পারে,
+অথবা আলাদা critic agent review করতে পারে।
+
+সহজভাবে:
+Create → Check → Improve
+
+2. Tool Use
+
+LLM শুধু text generate করবে না; প্রয়োজন হলে external tools ব্যবহার করবে।
+
+যেমন:
+
+User asks a math question → LLM → Calculator / Code tool → Answer
+
+অথবা:
+
+LLM → Web Search → Information
+LLM → Database → Data
+LLM → Email API → Send email
+
+মূল idea:
+LLM নিজে সব কাজ না করে প্রয়োজন অনুযায়ী tools call করে।
+
+3. Planning
+
+এখানে developer আগে থেকে সব steps ঠিক করে দেয় না।
+LLM নিজেই ঠিক করে কোন কাজ আগে, কোন কাজ পরে করতে হবে।
+
+Complex task → LLM creates a plan → Step 1 → Step 2 → Step 3
+
+অর্থাৎ:
+Planning = LLM decides the sequence of actions.
+
+এটা flexible, কিন্তু control করা তুলনামূলক কঠিন।
+
+4. Multi-Agent Collaboration
+
+একজন agent দিয়ে সব কাজ না করিয়ে, বিভিন্ন কাজের জন্য আলাদা agent তৈরি করে
+তাদের একসাথে কাজ করানো।
+
+যেমন একটি marketing brochure তৈরি করতে:
+
+Research Agent → Marketing Agent → Editor Agent → Final Brochure
+
+প্রতিটি agent-এর আলাদা responsibility থাকে।
+
+সহজভাবে:
+Multi-agent = Multiple specialized agents working together.
+
+সবগুলো একসাথে মনে রাখার সহজ উপায়:
+
+Reflection → Check and improve
+Tool Use → Use external tools
+Planning → Decide what to do next
+Multi-Agent → Multiple agents work together
+
+Interview-এর জন্য সবচেয়ে গুরুত্বপূর্ণ:
+
+The four common agentic workflow patterns are
+reflection, tool use, planning,
+and multi-agent collaboration.
+
+এবং এই module-এর overall idea:
+
+Building Blocks → Design Patterns → Agentic Workflow → Evals → Improve

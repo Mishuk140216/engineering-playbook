@@ -1,6 +1,0 @@
-Module 1: Foundations
-
-Notes:
-- Overview of agentic AI foundations.
-- Core concepts and building blocks.
-- Key takeaways from the lesson.

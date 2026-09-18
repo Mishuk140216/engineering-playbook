@@ -1,0 +1,145 @@
+Agentic AI-এর autonomy বা স্বায়ত্তশাসনের মাত্রা একরকম নয়।
+কোনো agent খুব কম autonomous হতে পারে,
+আর কোনো agent অনেক বেশি autonomous হতে পারে।
+
+## 1) Agentic AI = autonomy spectrum
+
+“এটি সত্যিকারের agent কি না?”
+—এই binary debate-এর বদলে,
+আমরা agentic system-কে autonomy-এর spectrum হিসেবে দেখি।
+
+একটি systemকে এভাবে ভাবা ভালো:
+
+- less autonomous
+- semi-autonomous
+- highly autonomous
+
+সব systemকেই “Agent” বা “Not Agent” এ ভাগ করা উচিত নয়।
+
+## 2) Less autonomous workflow
+
+কম autonomous agent-এর ক্ষেত্রে,
+programmer আগে থেকেই পুরো workflow নির্ধারণ করে দেয়।
+
+Example:
+
+User Input
+↓
+LLM creates search queries
+↓
+Web Search API
+↓
+Fetch web pages
+↓
+LLM writes essay
+↓
+Final Output
+
+এখানে developer/programmer আগে থেকেই ঠিক করে রেখেছেন:
+- কোন step আসবে
+- কোন tool ব্যবহার হবে
+- কোন sequence থাকবে
+
+LLM মূলত নির্দিষ্ট step-এর মধ্যে text generate করে।
+তাই এটাকে less autonomous agentic workflow বলা যায়।
+
+## 3) More autonomous workflow
+
+আরও autonomous agent-এ programmer সব decision আগে থেকে নির্ধারণ করে দেয় না।
+
+Example:
+
+User Request
+↓
+LLM decides whether to search
+↓
+LLM chooses tools
+↓
+LLM fetches relevant pages
+↓
+LLM analyzes information
+↓
+LLM writes draft
+↓
+LLM reviews and revises
+↓
+Final Output
+
+এখানে workflow-এর exact sequence আগে থেকে programmer লিখে দেয়নি।
+LLM নিজেই কিছু সিদ্ধান্ত নিচ্ছে, যেমন:
+- কোন tool ব্যবহার করবে
+- কতগুলো page পড়বে
+- আরও research দরকার কি না
+- result improve করার জন্য আবার search করবে কি না
+
+## 4) Three useful levels of autonomy
+
+### Less autonomous
+- most steps are predefined by developer
+- tools are often hard-coded
+- LLM mainly generates text or chooses a local step
+
+### Semi-autonomous
+- LLM makes some decisions
+- developer still defines the overall workflow
+- tool selection or decision branching may be dynamic
+
+### Highly autonomous
+- LLM can decide the sequence of actions
+- LLM can choose tools on its own
+- LLM can decide whether more research or revision is needed
+
+## 5) Why more autonomy is not always better
+
+বেশি autonomy মানেই সবসময় ভালো নয়।
+
+Less autonomous workflow অনেক বেশি:
+- predictable
+- controllable
+- easy to debug
+
+Highly autonomous workflow অনেক বেশি:
+- flexible
+- capable of complex tasks
+- but less predictable and harder to debug
+
+Business applications-এ often less autonomous
+বা semi-autonomous workflow বেশি useful হয়।
+
+## 6) Simple example
+
+### Less autonomous version
+Research Topic → Search Query → Web Search → Fetch 5 Pages → Summarize
+
+### Semi-autonomous version
+Research Topic → LLM chooses search query → Web Search
+→ LLM chooses relevant pages → Summarize
+
+### Highly autonomous version
+Research Topic → Agent creates research plan
+→ Agent chooses tools
+→ Agent searches
+→ Agent decides more research is needed
+→ Agent reviews and revises
+→ Final Report
+
+## 7) Interview answer
+
+“Agentic systems can have different degrees of autonomy.
+In a less autonomous workflow, the developer defines most of the steps and tool calls.
+In a semi-autonomous workflow, the LLM makes some decisions.
+In a highly autonomous agent, the LLM can decide the sequence of actions,
+choose tools, and decide what to do next.”
+
+## 8) Final takeaway
+
+Agentic AI মানে highly autonomous AI নয়।
+
+একটি simple predefined workflow-ও agentic হতে পারে,
+এবং অনেক business application-এ খুব valuable।
+
+simplest mental model হলো:
+
+- Less Autonomous = Programmer decides the workflow
+- Semi-Autonomous = Programmer + LLM share decisions
+- Highly Autonomous = LLM makes many workflow decisions

@@ -1,0 +1,50 @@
+এই lesson-এর মূল বিষয় হলো Reflection। Reflection মানে AI প্রথমে একটি output তৈরি করবে, 
+তারপর সেই output নিজেই review করে ভুল খুঁজবে এবং improved version তৈরি করবে।
+
+সহজ example:
+
+First Draft → Review → Improve → Final Output
+
+Email-এর ক্ষেত্রে:
+
+Write Email v1 → Check Email → Fix mistakes → Email v2
+
+Code-এর ক্ষেত্রে:
+
+Generate Code v1 → Check for bugs → Fix bugs → Code v2
+
+একই LLM দিয়ে দুটো কাজ করা যায়, আবার আলাদা LLM-ও ব্যবহার করা যায়। যেমন প্রথম LLM code লিখতে পারে,
+ আর একটি reasoning model code-এর bug খুঁজতে পারে।
+
+সবচেয়ে গুরুত্বপূর্ণ বিষয় হলো External Feedback। শুধু AI-কে “check your code” বলার চেয়ে 
+code execute করে তার result বা error message AI-কে দিলে reflection অনেক বেশি useful হয়।
+
+Generate Code v1 → Run Code → Get Error → Give Error to LLM → Fix Code → Code v2
+
+উদাহরণ:
+
+Generate Code → Syntax Error → LLM sees error → Correct Code
+
+তাই মনে রাখবেন:
+
+Reflection = Generate → Review → Improve
+
+আর সবচেয়ে important:
+
+Reflection without feedback → কিছুটা improvement
+Reflection + external feedback → অনেক বেশি useful
+
+External feedback হতে পারে:
+
+Code → Error message
+Search → New information
+Test → Test result
+API → API response
+
+Reflection 100% correct করে দেয় না, কিন্তু output-এর quality improve করতে পারে।
+
+Interview-এর জন্য:
+
+Reflection is a design pattern where an LLM reviews its own output, 
+uses feedback to identify problems, and generates an improved version. 
+External feedback makes reflection more effective.
