@@ -1,0 +1,59 @@
+এই lesson-এ মূল বিষয় হলো Direct Generation বনাম Reflection।
+
+Direct Generation মানে LLM-কে একবার prompt দিয়ে সরাসরি final answer তৈরি করানো।
+
+Prompt → LLM → Final Answer
+
+এটাকে Zero-shot prompting বলা হয় যখন prompt-এর মধ্যে কোনো example দেওয়া থাকে না।
+
+যেমন:
+
+"Write a Python function to calculate compound interest." → LLM → Code
+
+Reflection হলে:
+
+Prompt → LLM → First Answer → Review → Improve → Final Answer
+
+Reflection অনেক ক্ষেত্রে output-এর quality improve করতে পারে, কারণ LLM তার প্রথম output-এর ভুল বা সমস্যা খুঁজে আবার ঠিক করার সুযোগ পায়।
+
+Reflection বিশেষভাবে useful হতে পারে যখন:
+
+Complex JSON → Check structure → Fix errors
+HTML → Check formatting → Fix
+Instructions → Check missing steps → Improve
+Email → Check tone/facts → Improve
+Code → Check bugs → Fix
+
+একটি ভালো reflection prompt-এ কী কী check করতে হবে সেটা পরিষ্কার করে বলা ভালো।
+
+উদাহরণ:
+
+Review the email.
+
+Check:
+- Is the tone appropriate?
+- Are the facts correct?
+- Are there any missing details?
+- Are there any mistakes?
+
+Then write an improved version.
+
+আর Zero-shot / One-shot / Few-shot খুব সহজভাবে:
+
+Zero-shot → 0 examples
+One-shot  → 1 example
+Few-shot  → Several examples
+
+সবচেয়ে গুরুত্বপূর্ণ:
+
+Direct Generation
+Prompt → Answer
+
+Reflection
+Prompt → Answer → Review → Improve
+
+মনে রাখবেন: Reflection সবসময় better result guarantee করে না। কিন্তু অনেক task-এ প্রথম output review ও improve করার কারণে performance বাড়তে পারে।
+
+Interview-এর জন্য:
+
+Direct generation produces an answer in one step, while reflection generates an initial answer, reviews it against specific criteria, and produces an improved version.
