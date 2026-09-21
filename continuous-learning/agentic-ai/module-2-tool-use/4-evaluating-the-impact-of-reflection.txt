@@ -1,0 +1,154 @@
+এই lesson-এর মূল বিষয় হলো Reflection ব্যবহার করলে performance সত্যিই কতটা improve হচ্ছে, 
+সেটা Evals দিয়ে মাপা।
+
+Reflection system-কে improve করতে পারে, কিন্তু এর একটা cost আছে—কারণ extra step লাগে, 
+তাই system একটু slow হতে পারে। তাই Reflection রাখার আগে দেখতে হবে, এটি আসলে কতটা improvement দিচ্ছে।
+
+এখানে database query-এর example দেওয়া হয়েছে।
+
+ধরো, একটি retail store-এর database আছে। User প্রশ্ন করল:
+
+“Which color product has the highest total sales?”
+
+প্রথমে একটি LLM প্রশ্নটি দেখে SQL query তৈরি করবে।
+
+User Question → LLM → SQL Query → Database → Answer
+
+কিন্তু সরাসরি query execute না করে Reflection যোগ করা হলো:
+
+User Question → LLM → SQL Query v1 → Reflection → Improved SQL Query → Database → Answer
+
+এখন প্রশ্ন হলো: Reflection যোগ করার ফলে কি সত্যিই answer ভালো হচ্ছে?
+
+এটা জানার জন্য আগে কিছু প্রশ্ন এবং তাদের সঠিক উত্তর (ground truth) সংগ্রহ করা হলো।
+
+যেমন:
+
+May 2025-এ কতটি item বিক্রি হয়েছে? → 1301
+Inventory-তে সবচেয়ে expensive item কোনটি?
+Store-এ কতগুলো style আছে?
+
+এভাবে 10–15টি প্রশ্ন এবং প্রত্যেকটির সঠিক answer রাখা হলো।
+
+তারপর একই প্রশ্ন দুইভাবে test করা হলো:
+
+Without Reflection → Answer
+
+With Reflection → Answer
+
+তারপর দেখা হলো কত শতাংশ answer correct।
+
+Example:
+
+Without Reflection → 87% correct
+
+With Reflection → 95% correct
+
+অর্থাৎ এই example-এ Reflection 87% থেকে 95% accuracy-তে improve করেছে। 
+তাই এখানে Reflection useful বলে বোঝা যাচ্ছে।
+
+আরেকটি গুরুত্বপূর্ণ বিষয় হলো prompt tuning। তুমি initial prompt বা reflection prompt 
+পরিবর্তন করলে eval আবার run করে দেখতে পারো performance বাড়ল নাকি কমল।
+
+Change Prompt → Run Eval → Measure Score → Compare → Improve Prompt
+
+এজন্য Evals খুব গুরুত্বপূর্ণ। শুধু “আমার মনে হচ্ছে নতুন prompt ভালো” বললে হবে না; 
+একই test set দিয়ে measurement করলে objective comparison করা যায়।
+
+এরপর lesson-এ objective eval এবং subjective eval-এর পার্থক্য দেখানো হয়েছে।
+
+Objective evaluation হলো যেখানে clear right/wrong answer আছে।
+
+যেমন:
+
+Expected Answer = 1301
+
+AI answer যদি 1301 হয় → Correct ✅
+AI answer যদি 1250 হয় → Wrong ❌
+
+এখানে code দিয়ে সহজেই check করা যায়।
+
+কিন্তু chart-এর ক্ষেত্রে বিষয়টা আলাদা। ধরো Reflection-এর আগে একটি stacked bar chart এবং 
+Reflection-এর পরে একটি regular bar chart তৈরি হলো। এখন প্রশ্ন:
+
+“কোন chart ভালো?”
+
+এখানে সবসময় একটি নির্দিষ্ট correct answer নেই। একজন মানুষ বলতে পারে দ্বিতীয়টি clearer, 
+আর অন্য কেউ কিছুটা ভিন্নভাবে evaluate করতে পারে। এটিই subjective evaluation।
+
+Subjective evaluation-এর জন্য একটি LLM-কে judge হিসেবে ব্যবহার করা যেতে পারে।
+
+যেমন:
+
+Chart → LLM Judge → Quality Score
+
+কিন্তু শুধু LLM-কে বলা:
+
+“Which chart is better?”
+
+এটা খুব reliable নাও হতে পারে। কারণ LLM-এর position bias থাকতে পারে। অর্থাৎ দুইটি option দিলে প্রথম option-টিকেই বেশি ভালো বলা হতে পারে।
+
+তাই আরও ভালো approach হলো rubric ব্যবহার করা।
+
+Rubric মানে হলো আগে থেকে নির্দিষ্ট evaluation criteria তৈরি করা।
+
+যেমন chart-এর জন্য:
+
+Clear title আছে? → Yes/No
+Axis labels আছে? → Yes/No
+Appropriate chart type? → Yes/No
+Readable? → Yes/No
+Data clearly understandable? → Yes/No
+
+তারপর প্রতিটি criteria-তে binary score দেওয়া যায়:
+
+Yes = 1
+
+No = 0
+
+ধরো 5টি criteria-এর মধ্যে:
+
+1 + 1 + 1 + 0 + 1 = 4/5
+
+এভাবে সরাসরি “1 থেকে 5-এর মধ্যে কত score?” জিজ্ঞেস করার চেয়ে ছোট ছোট clear criteria 
+দিয়ে score করা বেশি consistent হতে পারে।
+
+তারপর 10–15টি visualization-এর জন্য:
+
+Without Reflection → Generate Images → Evaluate with Rubric
+
+এবং
+
+With Reflection → Generate Images → Evaluate with Rubric
+
+দুইটির score compare করা যায়।
+
+সবশেষে lesson-এর মূল idea:
+
+Objective task → Code-based evaluation বেশি সহজ ও reliable।
+
+Subjective task → LLM judge + clear rubric ব্যবহার করা যেতে পারে।
+
+সবচেয়ে important workflow:
+
+Build Workflow → Create Evals → Test Without Reflection → Test With Reflection → 
+Compare Results → Improve Prompts → Run Evals Again
+
+মনে রাখবে: Reflection ভালো কিনা সেটা শুধু output দেখে অনুমান না করে Eval দিয়ে measure করতে হবে। 
+কারণ Reflection-এর benefit-এর পাশাপাশি extra processing time/cost-ও থাকতে পারে।
+
+এই lesson-এর Technical Terms:
+
+Eval / Evaluation → AI system কতটা ভালো কাজ করছে তা মাপার পদ্ধতি।
+Reflection → AI নিজের তৈরি output review করে improve করার process।
+Ground Truth → কোনো প্রশ্নের আগে থেকে জানা সঠিক answer।
+Objective Evaluation → clear right/wrong answer দিয়ে evaluation করা।
+Subjective Evaluation → quality বা preference-এর মতো বিষয় বিচার করে evaluation করা।
+LLM as a Judge → একটি LLM দিয়ে অন্য LLM-এর output evaluate করা।
+Rubric → output evaluate করার জন্য আগে থেকে নির্ধারিত criteria-এর তালিকা।
+Binary Score → প্রতিটি criteria-তে সাধারণত 1 = Yes/Correct, 0 = No/Wrong score দেওয়া।
+Position Bias → LLM দুইটি option compare করার সময় position-এর কারণে প্রথম/দ্বিতীয় option-কে বেশি পছন্দ করার tendency।
+Prompt Tuning → ভালো performance পাওয়ার জন্য prompt পরিবর্তন ও পরীক্ষা করা।
+Multimodal LLM → text-এর পাশাপাশি image-এর মতো অন্য ধরনের input-ও বুঝতে পারে এমন LLM।
+Performance → system কত ভালোভাবে বা কত accurate ভাবে কাজ করছে।
+Accuracy → মোট answer-এর মধ্যে কত শতাংশ সঠিক হয়েছে।

@@ -1,0 +1,61 @@
+এই lesson-এর মূল বিষয় হলো Chart Generation Workflow-এর মধ্যে Reflection ব্যবহার করলে কীভাবে AI আরও ভালো chart তৈরি করতে পারে।
+
+ধরো, আমাদের কাছে coffee machine-এর sales data আছে। CSV file-এ প্রতিটি drink-এর নাম, কতগুলো বিক্রি হয়েছে, price ইত্যাদি information আছে। আমাদের লক্ষ্য হলো 2024 এবং 2025 সালের Q1 coffee sales compare করার একটি ভালো chart তৈরি করা।
+
+প্রথমে সাধারণভাবে AI-কে বলা হলো:
+
+Coffee Sales Data + Prompt → LLM → Python Code → Chart
+
+LLM Python code লিখে একটি chart তৈরি করল। কিন্তু প্রথম chart-টি হয়তো technically correct হলেও দেখতে ভালো নয়। যেমন, LLM একটি stacked bar chart বানাতে পারে, যেখানে 2024 এবং 2025-এর sales comparison সহজে বোঝা যাচ্ছে না।
+
+এখানেই Reflection ব্যবহার করা হয়।
+
+First Code → Run Code → First Chart → Review → Find Problems → Improve Code → Better Chart
+
+Reflection-এর সময় AI শুধু Python code দেখে না। এখানে generated chart-এর image-ও AI-কে দেওয়া হয়।
+
+যেহেতু multimodal LLM image দেখতে পারে, তাই AI chart দেখে বলতে পারে:
+
+chart কি সহজে বোঝা যাচ্ছে?
+2024 এবং 2025-এর comparison পরিষ্কার কি না?
+labels readable কি না?
+chart unnecessarily complicated কি না?
+আরও ভালো visualization করা যায় কি না?
+
+তারপর AI নিজের প্রথম code পরিবর্তন করে নতুন code তৈরি করে।
+
+Version 1 Code → Version 1 Chart → AI Reviews Chart → Version 2 Code → Version 2 Chart
+
+উদাহরণ:
+
+প্রথমে:
+
+Coffee Data → Python → Stacked Bar Chart
+
+Reflection-এর পরে:
+
+Coffee Data → Improved Python → Regular Bar Chart
+
+দ্বিতীয় chart-এ 2024 এবং 2025-এর sales আলাদা করে দেখা সহজ হতে পারে।
+
+আরও গুরুত্বপূর্ণ হলো, Reflection prompt-এ specific criteria দেওয়া উচিত। যেমন:
+
+Review for → Readability + Clarity + Completeness
+
+এতে AI বুঝতে পারে ঠিক কী কী বিষয় পরীক্ষা করতে হবে।
+
+আর initial generation এবং reflection-এর জন্য একই model ব্যবহার করতেই হবে না।
+
+LLM 1 → Generate Code
+
+LLM 2 → Review + Improve
+
+কখনো reasoning model reflection-এর জন্য ভালো কাজ করতে পারে, কারণ তাকে প্রথম output-এর সমস্যা খুঁজে বের করতে হয়। Reasoning model এমন model, যেটা কোনো problem-এর উত্তর দেওয়ার আগে বিষয়টি বেশি গভীরভাবে analyse করে এবং step-by-step reasoning করতে পারে।
+
+এই lesson-এর সবচেয়ে গুরুত্বপূর্ণ idea:
+
+AI শুধু output তৈরি করবে না; output দেখে নিজের কাজ review করে আবার improve করতে পারে।
+
+Generate → Execute → Observe → Reflect → Improve → Execute Again
+
+তবে Reflection সবসময় performance অনেক বাড়াবে এমন নয়। কিছু application-এ অনেক improvement হতে পারে, কিছুতে সামান্য, আবার কিছুতে প্রায় কোনো improvement নাও হতে পারে। তাই নিজের application-এ eval করে দেখতে হবে Reflection আসলে কতটা useful।

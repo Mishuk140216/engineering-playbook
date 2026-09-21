@@ -14,7 +14,8 @@ Reflection হলে:
 
 Prompt → LLM → First Answer → Review → Improve → Final Answer
 
-Reflection অনেক ক্ষেত্রে output-এর quality improve করতে পারে, কারণ LLM তার প্রথম output-এর ভুল বা সমস্যা খুঁজে আবার ঠিক করার সুযোগ পায়।
+Reflection অনেক ক্ষেত্রে output-এর quality improve করতে পারে, কারণ LLM তার প্রথম output-এর ভুল বা 
+সমস্যা খুঁজে আবার ঠিক করার সুযোগ পায়।
 
 Reflection বিশেষভাবে useful হতে পারে যখন:
 
@@ -52,8 +53,10 @@ Prompt → Answer
 Reflection
 Prompt → Answer → Review → Improve
 
-মনে রাখবেন: Reflection সবসময় better result guarantee করে না। কিন্তু অনেক task-এ প্রথম output review ও improve করার কারণে performance বাড়তে পারে।
+মনে রাখবেন: Reflection সবসময় better result guarantee করে না। কিন্তু অনেক task-এ প্রথম output 
+review ও improve করার কারণে performance বাড়তে পারে।
 
 Interview-এর জন্য:
 
-Direct generation produces an answer in one step, while reflection generates an initial answer, reviews it against specific criteria, and produces an improved version.
+Direct generation produces an answer in one step, while reflection generates an initial 
+answer, reviews it against specific criteria, and produces an improved version.
