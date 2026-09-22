@@ -1,6 +1,0 @@
-Module 3: Planning
-
-Notes:
-- Planning strategies for agentic workflows.
-- Task decomposition and execution flow.
-- Key takeaways from the lesson.

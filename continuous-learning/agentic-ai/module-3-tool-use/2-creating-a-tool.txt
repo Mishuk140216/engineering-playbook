@@ -1,0 +1,125 @@
+এই lesson-এ মূল বিষয় হলো LLM নিজে সরাসরি function চালায় না। 
+LLM প্রথমে একটি নির্দিষ্ট format-এ function call করার request তৈরি করে, 
+তারপর developer-এর code সেই function চালায় এবং result আবার LLM-কে দেয়।
+
+ধরো আমাদের একটি function আছে:
+
+getCurrentTime()
+
+User জিজ্ঞেস করল:
+
+“What time is it?”
+
+পুরো process:
+
+User Question → LLM → Function Call Request → Developer Code → Function → Result → 
+LLM → Final Answer
+
+ধাপে ধাপে:
+
+1. Tool তৈরি করা
+
+Developer একটি function তৈরি করল:
+
+getCurrentTime()
+
+এই function current time return করে।
+
+2. LLM-কে জানানো যে এই tool আছে
+
+আগের দিনের পদ্ধতিতে prompt-এর মধ্যে বলা হতো:
+
+যদি current time দরকার হয়, FUNCTION: getCurrentTime output করো।
+
+3. User প্রশ্ন করে
+
+User → "What time is it?"
+
+LLM বুঝল current time জানার জন্য tool দরকার।
+
+4. LLM function call request তৈরি করে
+
+LLM সরাসরি function execute করে না। এটি এমন একটি output দেয়:
+
+FUNCTION: getCurrentTime
+
+এটা আসলে LLM-এর request—“আমার জন্য এই function-টা call করো।”
+
+5. Developer-এর code request দেখে
+
+Developer-এর code LLM-এর output check করে।
+
+যদি দেখে:
+
+FUNCTION: getCurrentTime
+
+তাহলে code বুঝবে যে getCurrentTime() function চালাতে হবে।
+
+6. Function execute হয়
+
+getCurrentTime() → 8 AM
+
+7. Function-এর result আবার LLM-কে দেওয়া হয়
+
+8 AM → LLM
+
+এটি conversation history-এর অংশ হিসেবে LLM-এর কাছে যায়।
+
+8. LLM final answer তৈরি করে
+
+LLM → "It is 8 AM."
+
+তাই খুব সহজভাবে:
+
+User → LLM → Request Tool → Developer Code → Tool → Result → LLM → Answer
+
+আরও গুরুত্বপূর্ণ হলো, tool-এর argument থাকতে পারে।
+
+যেমন:
+
+getCurrentTime(timezone)
+
+User বলল:
+
+“What time is it in New Zealand?”
+
+তখন LLM request করতে পারে:
+
+FUNCTION: getCurrentTime + Pacific/Auckland
+
+এখানে Pacific/Auckland হলো argument।
+
+তারপর:
+
+LLM → getCurrentTime(Pacific/Auckland) → 4 AM → LLM → "It is 4 AM in New Zealand."
+
+একটি LLM-এর কাছে একাধিক tool থাকলেও একই concept কাজ করে:
+
+User → LLM → Choose Tool → Tool Call → Result → LLM
+
+এমনকি result পাওয়ার পর LLM আবার আরেকটি tool call করতে পারে:
+
+User → LLM → Tool 1 → Result → LLM → Tool 2 → Result → LLM → Final Answer
+
+এই process চলতে পারে যতক্ষণ না LLM মনে করে কাজ শেষ হয়েছে।
+
+আর lesson-এর historical point হলো: আগে developer-রা 
+FUNCTION: ... এর মতো special text format নিজেরা prompt-এ define করত এবং 
+code দিয়ে সেই text খুঁজে function call করত। Modern LLM-গুলো native tool/function 
+calling support করে, তাই developer-কে এই পুরোনো all-caps syntax manually বানাতে হয় না।
+
+সবচেয়ে গুরুত্বপূর্ণ কথা:
+
+LLM সাধারণত নিজে function execute করে না। LLM function call-এর request তৈরি করে, 
+application/developer code function execute করে, তারপর result LLM-কে ফিরিয়ে দেয়।
+
+নতুন Technical Terms:
+
+Function Calling → LLM-এর মাধ্যমে কোনো function চালানোর request তৈরি করা।
+Tool Call / Function Call Request → LLM-এর tool ব্যবহার করার request।
+System Prompt → LLM-কে তার behavior, available tools এবং rules সম্পর্কে দেওয়া instruction।
+Tool Result → function execute করার পর পাওয়া result।
+Native Tool Calling → modern LLM-এর built-in capability, যার মাধ্যমে structuredভাবে tool call request করা যায়।
+Syntax → কোনো information বা request প্রকাশ করার নির্দিষ্ট format/rule।
+Hard-coded → developer code-এর মধ্যে আগে থেকেই নির্দিষ্ট করে দেওয়া behavior।
+Tool Loop → LLM → Tool → Result → LLM process বারবার চলা।

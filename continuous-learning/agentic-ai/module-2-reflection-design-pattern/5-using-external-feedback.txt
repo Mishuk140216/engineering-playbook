@@ -1,0 +1,108 @@
+এই lesson-এর মূল বিষয় হলো Reflection-এর সাথে External Feedback যোগ করলে Reflection 
+আরও powerful হয়।
+
+সাধারণ Reflection-এ AI নিজের আগের output দেখেই সেটা improve করার চেষ্টা করে:
+
+First Output → LLM Reflection → Improved Output
+
+এখানে problem হলো, AI প্রায় একই information আবার ব্যবহার করছে। 
+তাই improvement একটা পর্যায়ের পর plateau করতে পারে। অর্থাৎ prompt যতই change করো, 
+performance আর খুব বেশি বাড়ছে না।
+
+তখন External Feedback ব্যবহার করা যায়।
+
+External feedback মানে হলো AI-এর বাইরে থেকে পাওয়া নতুন information, যা AI-এর প্রথম output-এ ছিল না।
+
+First Output → External Tool/Feedback → New Information → Reflection → Improved Output
+
+উদাহরণ ১: Code
+
+AI Python code লিখল। Code run করার পর error হলো।
+
+Generate Code → Run Code → Error Message → Reflection → Fix Code
+
+এখানে error message হলো external feedback। AI নিজে শুধু code দেখে অনুমান করছে না; 
+actual execution থেকে নতুন information পাচ্ছে।
+
+উদাহরণ ২: Competitor name check
+
+ধরো AI একটি marketing email লিখল, কিন্তু সেখানে competitor-এর নাম চলে এসেছে।
+
+একটি software tool বা regular expression দিয়ে email check করা হলো।
+
+Email → Pattern Matching → Competitor Name Found → Feedback → Reflection → Rewrite Email
+
+এখানে tool AI-কে exact information দিল যে competitor-এর নাম কোথায় আছে। 
+AI সেই information ব্যবহার করে email আবার লিখতে পারে।
+
+উদাহরণ ৩: Fact checking
+
+AI একটি article লিখল এবং বলল:
+
+“Taj Mahal was built in 1648.”
+
+কিন্তু web search বা trusted source ব্যবহার করলে আরও precise historical information পাওয়া যেতে পারে—
+যেমন construction/commissioning-এর সময়ের পার্থক্য।
+
+Article → Web Search → Trusted Information → Reflection → More Accurate Article
+
+অর্থাৎ Reflection-এর জন্য web search নতুন information এনে দিল।
+
+উদাহরণ ৪: Word limit
+
+ধরো AI-কে বলা হলো 100 words-এর মধ্যে একটি paragraph লিখতে। AI 125 words লিখে ফেলল।
+
+একটি word-count tool exact count বের করতে পারে:
+
+Generated Text → Word Count Tool → 125 Words → Reflection → Shorter Text
+
+এখানে AI অনুমান করছে না; tool তাকে exact information দিচ্ছে।
+
+তাই এই lesson-এর সবচেয়ে important concept:
+
+Reflection + External Feedback > Reflection using only the LLM's own output
+
+অর্থাৎ AI যদি শুধু নিজের output review করে, improvement হতে পারে। কিন্তু যদি বাইরে থেকে নতুন, 
+reliable information এনে সেই information reflection-এর মধ্যে দেওয়া যায়, 
+তাহলে অনেক ক্ষেত্রে improvement আরও বেশি হতে পারে।
+
+সহজভাবে:
+
+Generate → External Feedback → Reflect → Improve
+
+External feedback আসতে পারে:
+
+Code Execution → Error/Output
+
+Web Search → New Facts
+
+Pattern Matching → Specific Problem
+
+Word Counter → Exact Word Count
+
+Database → Actual Data
+
+এখানে একটা গুরুত্বপূর্ণ idea হলো diminishing returns। অনেক সময় শুধু prompt পরিবর্তন 
+করতে করতে একটা পর্যায়ে performance আর খুব বেশি বাড়ে না। 
+তখন শুধু prompt আরও tune করার বদলে Reflection বা External Feedback যোগ করলে 
+নতুনভাবে performance improve করার সুযোগ তৈরি হতে পারে।
+
+এক লাইনে lesson:
+Reflection AI-কে নিজের output improve করতে সাহায্য করে, আর External Feedback AI-কে 
+নতুন বাস্তব information দেয়—এই দুইটি একসাথে ব্যবহার করলে reflection আরও effective হতে পারে।
+
+নতুন Technical Terms:
+
+External Feedback → AI-এর বাইরে থেকে পাওয়া নতুন information, যা output improve করতে সাহায্য করে।
+Diminishing Returns → বেশি চেষ্টা করার পরেও improvement ধীরে ধীরে কমে যাওয়া।
+Plateau → performance একটি level-এ গিয়ে আর তেমন improve না করা।
+Feedback Loop → output → feedback → improvement → নতুন output—এই repeated process।
+Code Execution → code চালিয়ে actual result বা error পাওয়া।
+Error Message → code চালানোর সময় system যে error information দেয়।
+Pattern Matching → কোনো text-এর মধ্যে নির্দিষ্ট pattern বা word খুঁজে বের করা।
+Regular Expression (Regex) → text-এর মধ্যে নির্দিষ্ট pattern খোঁজার একটি technique।
+Fact Checking → information সত্য/সঠিক কি না trusted source দিয়ে যাচাই করা।
+Trusted Source → নির্ভরযোগ্য information-এর source।
+Word Count Tool → text-এ ঠিক কতটি word আছে তা গণনা করার tool।
+Prompt Engineering → ভালো output পাওয়ার জন্য prompt design ও improve করার process।
+Interject → workflow-এর মাঝখানে নতুন information বা feedback যোগ করা।

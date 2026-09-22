@@ -1,0 +1,59 @@
+এই lesson-এ মূলত দেখানো হয়েছে কীভাবে AISuite ব্যবহার করে LLM-কে tools/functions
+ ব্যবহার করার সুযোগ দেওয়া যায়। এখানে একটা গুরুত্বপূর্ণ বিষয় হলো—টেকনিক্যালি LLM নিজে tool execute করে না; 
+ LLM শুধু tool call/request তৈরি করে, আর AISuite/application সেই function execute করে এবং 
+ result আবার LLM-এর কাছে পাঠায়। তবে developer-রা সংক্ষেপে “LLM calls the tool” বলে থাকেন।
+
+AISuite-এ client.chat.completions.create()-এর মধ্যে tools দিয়ে LLM-কে কোন কোন function 
+ব্যবহার করতে পারবে তা দেওয়া যায়। যেমন getCurrentTime function দিলে LLM বুঝতে পারে কখন এই function 
+দরকার। এখানে max_turns ব্যবহার করা হয় tool-call loop সীমিত রাখার জন্য। কারণ একটি tool call-এর 
+result পাওয়ার পর LLM আবার অন্য tool চাইতে পারে → তারপর আবার আরেকটি tool চাইতে পারে। 
+যেমন max_turns=5 দিলে সর্বোচ্চ ৫টি tool-call turn পর্যন্ত চলবে। এতে ভুল workflow-এর কারণে 
+infinite loop হওয়ার ঝুঁকি কমে।
+
+AISuite-এর একটি সুবিধা হলো, developer-কে manually tool-এর জন্য বড় prompt লিখতে হয় না। 
+Function-এর docstring দেখে AISuite স্বয়ংক্রিয়ভাবে একটি JSON Schema তৈরি করে এবং সেটি LLM-কে দেয়। 
+এই schema-তে function-এর নাম, function কী করে তার description এবং function-এর প্রয়োজনীয় 
+parameters সম্পর্কে information থাকে।
+
+যেমন getCurrentTime() হলে schema-এ function name হবে getCurrentTime, আর docstring থেকে 
+function-এর description নেওয়া হবে। আবার যদি getCurrentTime(timezone) থাকে, 
+তাহলে AISuite বুঝতে পারবে যে timezone একটি parameter এবং এর value যেমন America/New_York বা 
+Pacific/Auckland হতে পারে। ফলে LLM সঠিক ধরনের argument তৈরি করে tool request করতে পারে।
+
+এই পুরো process-টা এমন:
+
+User → LLM → Tool Request → AISuite → Function Execute → Tool Result → LLM → Final Answer
+
+এই lesson-এর গুরুত্বপূর্ণ বিষয় হলো AISuite অনেক কাজ automatically handle করে। LLM যদি 
+getCurrentTime ব্যবহার করতে চায়, AISuite function call করে, result নেয়, result LLM-কে দেয়, 
+এবং প্রয়োজন হলে আবার LLM-এর পরবর্তী tool request execute করে। সবকিছু একটি 
+client.chat.completions.create() call-এর ভিতরেই handle হতে পারে। 
+অন্য কিছু LLM interface-এ এই tool execution loop developer-কে manually লিখতে হতে পারে।
+
+শেষে Andrew Ng একটি গুরুত্বপূর্ণ point বলেছেন: LLM-কে দেওয়া tools-এর মধ্যে code execution tool 
+বিশেষভাবে powerful। কারণ LLM যদি code লিখতে পারে এবং সেই code execute করার tool পায়, 
+তাহলে LLM অনেক ধরনের কাজ করতে পারে → calculation, data processing, file manipulation, 
+analysis, visualization ইত্যাদি। তাই পরের lesson-এ code execution as a tool নিয়ে আলোচনা 
+করা হবে।
+
+Interview takeaway:
+“An LLM does not directly execute a tool. It generates a structured tool-call request, 
+and the application or tool framework executes the function and sends the result back 
+to the LLM. Libraries such as AISuite can automate this tool-calling loop and generate tool schemas from function documentation.”
+
+নতুন Technical Terms:
+
+AISuite → একটি open-source library, যা বিভিন্ন LLM provider-এর সাথে কাজ করা এবং tool calling সহজ করে।
+Tool Calling → LLM-এর প্রয়োজন অনুযায়ী কোনো external function/tool ব্যবহারের request তৈরি করা।
+Function Call Request → LLM-এর তৈরি করা request, যেখানে কোন function চালাতে হবে এবং কী arguments দিতে হবে তা থাকে।
+JSON Schema → function-এর নাম, description, parameters এবং expected input-এর structured description।
+Docstring → function-এর ভিতরে লেখা documentation, যা function কী করে তা বর্ণনা করে।
+Parameter → function কী ধরনের input গ্রহণ করবে তার definition। যেমন timezone।
+Argument → function call করার সময় parameter-এর জন্য দেওয়া actual value। যেমন timezone="Asia/Tokyo"।
+Max Turns → LLM কতবার ধারাবাহিকভাবে tool request করতে পারবে তার maximum limit।
+Tool Execution → requested function/tool বাস্তবে চালানো।
+Tool Result → tool execute করার পর পাওয়া output।
+Tool-Calling Loop → LLM → tool request → execution → result → LLM—এই repeated process।
+Infinite Loop → workflow থামার condition না থাকলে একই ধরনের process অনির্দিষ্টভাবে চলতে থাকা।
+Code Execution Tool → LLM-এর তৈরি করা code execute করার জন্য দেওয়া tool।
+LLM Provider → যে service/company LLM model সরবরাহ করে।
