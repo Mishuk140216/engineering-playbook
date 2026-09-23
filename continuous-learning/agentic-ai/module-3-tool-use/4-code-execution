@@ -1,0 +1,100 @@
+এই lesson-এ মূল বিষয় হলো Code Execution Tool। সাধারণভাবে LLM-কে যদি শুধু add, subtract, 
+multiply, divide ইত্যাদি আলাদা আলাদা tools দেওয়া হয়, তাহলে প্রতিটি নতুন mathematical operation-এর 
+জন্য নতুন tool বানাতে হবে। যেমন square root-এর জন্য আলাদা tool, exponentiation-এর জন্য 
+আরেকটি tool ইত্যাদি। কিন্তু এর পরিবর্তে LLM-কে code লিখে execute করার ক্ষমতা দিলে LLM প্রয়োজন অনুযায়ী 
+নিজেই Python code তৈরি করে সমস্যার সমাধান করতে পারে।
+
+ধরো user জিজ্ঞেস করল: What is the square root of 2?
+
+LLM-কে বলা হলো → “Write code to solve the user's query and return the answer as 
+Python code inside specific execution tags.”
+
+তখন LLM এমন code তৈরি করতে পারে:
+
+import math
+print(math.sqrt(2))
+
+Application code execute Python tag দেখে generated code বের করে → Python code execute করে → 
+result পায় 1.4142... → সেই result আবার LLM-কে দেয় → LLM user-কে সুন্দরভাবে final answer দেয়।
+
+পুরো workflow:
+
+User → LLM → Python Code → Code Execution → Result → LLM → Final Answer
+
+এখানে বড় সুবিধা হলো, developer-কে প্রতিটি possible calculation-এর জন্য আলাদা tool বানাতে হয় না। 
+LLM প্রয়োজন অনুযায়ী code তৈরি করতে পারে। শুধু square root নয় → interest calculation, 
+complex mathematical calculation, data processing এবং অন্যান্য programmable tasks-ও করা সম্ভব।
+
+Code বের করার জন্য একটি পদ্ধতি হলো pattern matching বা regular expression (regex) ব্যবহার করা। 
+LLM যদি code-কে নির্দিষ্ট tags-এর মধ্যে দেয়, যেমন execute Python ... 
+execute Python, application সেই opening এবং closing tags খুঁজে code-এর মাঝের অংশ বের করতে পারে 
+এবং তারপর execute করতে পারে।
+
+Python-এর built-in exec() function দিয়েও generated code execute করা যায়। এটি খুব powerful, 
+কিন্তু এখানে একটি গুরুত্বপূর্ণ security risk আছে। কারণ LLM যে code তৈরি করবে সেটি সবসময় safe হবে—
+এমন guarantee নেই। ভুল বা unexpected code file delete করতে পারে, sensitive data access 
+করতে পারে অথবা system-এর ক্ষতি করতে পারে।
+
+Lesson-এ এর real example দেওয়া হয়েছে: একটি agentic coding system ভুল করে project directory-
+এর অনেক Python file delete করে ফেলেছিল। Fortunately backup/GitHub repository থাকায় বড় ক্ষতি 
+হয়নি। এই ঘটনা দেখায় যে LLM-generated arbitrary code সরাসরি নিজের system-এ execute করা ঝুঁকিপূর্ণ।
+
+তাই best practice হলো sandbox environment-এর ভিতরে code execute করা। Sandbox হলো এমন একটি 
+isolated environment যেখানে generated code সীমিত access নিয়ে চলে। ফলে ভুল code হলেও মূল system, 
+files বা sensitive data-এর ক্ষতির সম্ভাবনা কমে।
+
+উদাহরণ হিসেবে Docker বা E2B-এর মতো sandbox environment ব্যবহার করা যায়।
+
+আরেকটি গুরুত্বপূর্ণ বিষয় হলো code execution + reflection। যদি LLM ভুল code তৈরি করে এবং code 
+execution থেকে error message পাওয়া যায়, তাহলে সেই error message আবার LLM-কে দেওয়া যায়। 
+LLM error দেখে code modify করে আবার চেষ্টা করতে পারে।
+
+Flow:
+
+Generate Code → Execute → Error → LLM Reflect → Fix Code → Execute Again → Result
+
+এতে কিছু ক্ষেত্রে accuracy বাড়তে পারে, কারণ LLM শুধু নিজের generated code-এর উপর নির্ভর করছে না; 
+বাস্তবে code execute করে পাওয়া external feedback-ও ব্যবহার করছে।
+
+সবশেষে lesson-এ MCP (Model Context Protocol) introduce করা হয়েছে। এখন পর্যন্ত আমরা দেখেছি 
+developer-কে আলাদা আলাদা tools তৈরি করে LLM-এর কাছে available করে দিতে হয়। MCP একটি 
+নতুন standard/protocol, যা LLM application-কে অনেক ধরনের external tools-এর সাথে 
+standardized উপায়ে connect করা সহজ করে। পরের lesson-এ MCP নিয়ে বিস্তারিত আলোচনা হবে।
+
+সহজভাবে মনে রাখো:
+
+Traditional approach → প্রতি কাজের জন্য আলাদা tool বানাও।
+
+Code execution → LLM-কে code লিখতে দাও → code execute করো → result LLM-কে দাও।
+
+আর সবচেয়ে গুরুত্বপূর্ণ safety rule:
+
+LLM-generated code → Sandbox → Execute
+
+Interview takeaway:
+“Code execution allows an LLM to generate and execute code instead of 
+requiring a separate tool for every possible task. It greatly increases flexibility, 
+but arbitrary code execution introduces security risks, so generated code should 
+ideally run in a sandbox such as Docker or E2B. Execution errors can also be fed back 
+to the LLM for reflection and correction.”
+
+নতুন Technical Terms:
+
+Code Execution → LLM-এর তৈরি করা code বাস্তবে run করা।
+Code Execution Tool → LLM-কে code লিখে execute করার সুযোগ দেওয়া tool।
+Arbitrary Code → আগে থেকে নির্দিষ্ট না থাকা, LLM-এর generated যেকোনো code।
+Python exec() → Python-এর built-in function যা দেওয়া Python code execute করতে পারে।
+Pattern Matching → নির্দিষ্ট pattern খুঁজে text-এর প্রয়োজনীয় অংশ বের করা।
+Regular Expression (Regex) → text-এর মধ্যে নির্দিষ্ট pattern খোঁজা বা extract করার একটি powerful পদ্ধতি।
+Sandbox Environment → isolated environment যেখানে code সীমিত access নিয়ে execute হয়।
+Security Risk → generated code system, files বা data-এর ক্ষতি করার সম্ভাবনা।
+Data Leakage → sensitive বা private data অনিচ্ছাকৃতভাবে বাইরে চলে যাওয়া।
+Docker → container-based isolated environment তৈরি করার technology।
+E2B → AI-generated code নিরাপদভাবে sandbox-এ execute করার জন্য ব্যবহৃত platform।
+Error Message → code execute করার সময় কোনো সমস্যা হলে পাওয়া error information।
+External Feedback → LLM-এর বাইরে থেকে পাওয়া information, যেমন execution result বা error।
+Reflection with Execution Feedback → code execute করে পাওয়া result/error LLM-কে দিয়ে code 
+improve করা।
+MCP (Model Context Protocol) → LLM application-কে বিভিন্ন external tools-এর সাথে standardized 
+উপায়ে connect করার protocol।
+Protocol → বিভিন্ন software/system কীভাবে একে অপরের সাথে communicate করবে তার নির্দিষ্ট নিয়ম।

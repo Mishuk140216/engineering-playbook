@@ -43,17 +43,14 @@ to the LLM. Libraries such as AISuite can automate this tool-calling loop and ge
 
 নতুন Technical Terms:
 
-AISuite → একটি open-source library, যা বিভিন্ন LLM provider-এর সাথে কাজ করা এবং tool calling সহজ করে।
+AISuite → একটি open-source library, যা বিভিন্ন LLM provider-এর সাথে কাজ করা এবং tool calling
+ সহজ করে।
 Tool Calling → LLM-এর প্রয়োজন অনুযায়ী কোনো external function/tool ব্যবহারের request তৈরি করা।
-Function Call Request → LLM-এর তৈরি করা request, যেখানে কোন function চালাতে হবে এবং কী arguments দিতে হবে তা থাকে।
-JSON Schema → function-এর নাম, description, parameters এবং expected input-এর structured description।
+Function Call Request → LLM-এর তৈরি করা request, যেখানে কোন function চালাতে হবে এবং কী arguments
+ দিতে হবে তা থাকে।
+JSON Schema → function-এর নাম, description, parameters এবং expected input-এর structured 
+ description।
 Docstring → function-এর ভিতরে লেখা documentation, যা function কী করে তা বর্ণনা করে।
-Parameter → function কী ধরনের input গ্রহণ করবে তার definition। যেমন timezone।
-Argument → function call করার সময় parameter-এর জন্য দেওয়া actual value। যেমন timezone="Asia/Tokyo"।
 Max Turns → LLM কতবার ধারাবাহিকভাবে tool request করতে পারবে তার maximum limit।
 Tool Execution → requested function/tool বাস্তবে চালানো।
 Tool Result → tool execute করার পর পাওয়া output।
-Tool-Calling Loop → LLM → tool request → execution → result → LLM—এই repeated process।
-Infinite Loop → workflow থামার condition না থাকলে একই ধরনের process অনির্দিষ্টভাবে চলতে থাকা।
-Code Execution Tool → LLM-এর তৈরি করা code execute করার জন্য দেওয়া tool।
-LLM Provider → যে service/company LLM model সরবরাহ করে।
