@@ -1,0 +1,96 @@
+এই lesson-এ MCP (Model Context Protocol) কী এবং কেন এটি agentic AI application-এর জন্য 
+গুরুত্বপূর্ণ—সেটা বোঝানো হয়েছে।
+
+আগে যদি কোনো application-কে Slack, Google Drive, GitHub বা PostgreSQL database-এর সাথে 
+connect করতে হতো, তাহলে developer-কে প্রতিটি service-এর API-এর জন্য আলাদা code/wrapper লিখতে হতো। 
+আবার অন্য কোনো team একই services ব্যবহার করতে চাইলে তাদেরও একই ধরনের integration নিজেরা তৈরি করতে 
+হতো। ফলে যদি Mটি application এবং Nটি tool/data source থাকে, তাহলে মোট integration work 
+প্রায় M × N হয়ে যায়।
+
+MCP এই সমস্যার জন্য একটি common standard তৈরি করে। এর ফলে প্রতিটি application এবং প্রতিটি tool-এর 
+মধ্যে আলাদা আলাদা custom integration করার পরিবর্তে standard MCP interface ব্যবহার করা যায়। ফলে 
+community-এর মোট কাজ ধারণাগতভাবে M × N থেকে M + N-এর দিকে নেমে আসে।
+
+সহজভাবে:
+
+আগে → App A → Slack-এর জন্য আলাদা integration
+App A → GitHub-এর জন্য আলাদা integration
+App B → Slack-এর জন্য আবার আলাদা integration
+App B → GitHub-এর জন্য আবার আলাদা integration
+
+MCP-এর মাধ্যমে → Apps এবং tools একটি common protocol অনুসরণ করে → integration reuse করা সহজ হয়।
+
+MCP শুধু tool access-এর জন্য নয়, context/data access-এর জন্যও ব্যবহৃত হয়। MCP-এর terminology-তে 
+data/context দেওয়ার জিনিসগুলোকে Resources বলা হয়। যেমন কোনো GitHub repository-এর README file বা 
+কোনো database-এর data।
+
+অন্যদিকে application যে কাজগুলো করতে পারে, সেগুলো Tools হিসেবে দেওয়া যায়। যেমন GitHub MCP server-এর 
+মাধ্যমে repository থেকে file পড়া বা pull requests list করা।
+
+এখানে দুটি গুরুত্বপূর্ণ ধারণা আছে:
+
+MCP Client → যে application MCP-এর মাধ্যমে tools/resources ব্যবহার করে।
+
+MCP Server → যে server tools/resources provide করে।
+
+উদাহরণ হিসেবে একটি AI application-কে GitHub MCP server-এর সাথে connect করা হয়েছে। User বলল:
+
+“এই GitHub repository-এর readme.md summarize করো।”
+
+Workflow:
+
+User → MCP Client/AI Application → GitHub MCP Server → readme.md → MCP Client → LLM → 
+Summary
+
+আবার user যদি বলে:
+
+“What are the latest pull requests?”
+
+তাহলে LLM GitHub MCP server-এর অন্য একটি tool ব্যবহার করতে পারে → pull requests list করে → 
+result LLM-এর context-এ যায় → LLM user-কে summary দেয়।
+
+অর্থাৎ একই GitHub MCP server-এর মাধ্যমে বিভিন্ন ধরনের কাজ করা যায়, এবং application-কে প্রতিটি 
+GitHub API-এর জন্য নিজস্ব wrapper বানাতে হয় না।
+
+এখানে MCP-এর মূল ধারণাটা খুব সহজভাবে মনে রাখতে পারো:
+
+MCP = LLM/Application ↔ Tools + Data-এর জন্য common communication standard
+
+আরও সহজভাবে:
+
+MCP Client → tools/resources ব্যবহার করে
+MCP Server → tools/resources provide করে
+
+এই lesson-এর শেষ অংশে Andrew Ng বলেছেন, পরের module-এ Evals এবং Error Analysis নিয়ে আলোচনা 
+হবে। Agentic workflow ভালোভাবে তৈরি করার জন্য শুধু workflow বানানো যথেষ্ট নয় → সেটি কতটা ভালো কাজ করছে 
+তা নিয়মিত measure করতে হবে → কোথায় ভুল হচ্ছে তা খুঁজে বের করতে হবে → তারপর workflow improve করতে হবে।
+
+Interview takeaway:
+
+“MCP, or Model Context Protocol, is a standard that makes it easier for AI applications 
+to access external tools and data sources. An MCP client consumes tools and resources, 
+while an MCP server provides them. The main benefit is reducing the need for every 
+application to build custom integrations with every external service.”
+
+নতুন Technical Terms:
+
+MCP (Model Context Protocol) → AI application-এর সাথে external tools ও data sources connect 
+করার একটি standard protocol।
+MCP Client → MCP ব্যবহার করে tools বা resources access করা application।
+MCP Server → MCP-এর মাধ্যমে tools ও resources provide করা server।
+Resource → MCP-এর মাধ্যমে LLM/application-কে দেওয়া data বা context।
+Tool → কোনো action perform করার জন্য MCP server যে function provide করে।
+MCP Ecosystem → MCP ব্যবহার করে তৈরি clients, servers, tools, resources এবং developer 
+community-এর পুরো environment।
+API Wrapper → কোনো external API-কে application-এর জন্য সহজ function/interface হিসেবে ব্যবহারযোগ্য 
+করার code।
+Integration → একটি application-এর সাথে অন্য service/tool/data source connect করার process।
+Data Source → যেখান থেকে application data সংগ্রহ করে, যেমন GitHub, Slack বা database।
+Context → LLM-এর সিদ্ধান্ত নেওয়া বা answer তৈরি করার জন্য প্রয়োজনীয় information।
+Standard / Protocol → বিভিন্ন software কীভাবে একে অপরের সাথে communicate করবে তার নির্ধারিত common 
+rules।
+Custom Integration → নির্দিষ্ট application ও service-এর জন্য আলাদাভাবে তৈরি করা integration।
+M × N Problem → অনেক application এবং অনেক tool থাকলে প্রত্যেক application-কে প্রত্যেক tool-এর সাথে 
+আলাদাভাবে connect করার ফলে integration-এর কাজ দ্রুত বেড়ে যাওয়া।
+Reusable Integration → একবার তৈরি করা standard integration বিভিন্ন application-এ ব্যবহার করার 
+সুবিধা।
