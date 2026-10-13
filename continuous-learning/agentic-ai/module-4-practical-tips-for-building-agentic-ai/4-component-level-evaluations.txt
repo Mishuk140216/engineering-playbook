@@ -1,0 +1,118 @@
+এই lesson-এর মূল বিষয় হলো Component-Level Eval। আগের lesson-এ আমরা Error Analysis দিয়ে 
+identify করেছি কোন component-এ বেশি সমস্যা হচ্ছে। এখন সেই নির্দিষ্ট component-কে আলাদাভাবে evaluate 
+করে দ্রুত improve করার পদ্ধতি দেখানো হয়েছে।
+
+Research agent-এর example-এ ধরা যাক final article-এ গুরুত্বপূর্ণ points miss হচ্ছে এবং Error 
+Analysis থেকে বোঝা গেল web search component-এ সমস্যা থাকতে পারে। এখন যদি প্রতিবার web search 
+পরিবর্তন করার পর পুরো research workflow আবার চালাতে হয়, তাহলে evaluation খুব expensive এবং 
+slow হয়ে যাবে। কারণ পুরো workflow-এ অনেক component আছে, এবং অন্য component-এর randomness 
+বা errors-এর কারণে web search-এর ছোট improvement বোঝা কঠিন হতে পারে।
+
+তাই পুরো workflow evaluate করার বদলে শুধু web search component-এর জন্য একটি আলাদা eval তৈরি করা 
+যায়।
+
+উদাহরণ:
+
+Search Query → Web Search → Search Results
+
+এখন কিছু query নিয়ে একজন expert আগে থেকে বলে দেবেন কোন web resources সবচেয়ে authoritative বা 
+useful। এগুলো হবে gold-standard web resources।
+
+যেমন কোনো query-এর জন্য expert বললেন:
+
+Query → “Recent black hole discoveries”
+
+Gold-standard resources →
+
+Scientific source A
+Scientific source B
+Scientific source C
+
+তারপর বিভিন্ন search engine বা configuration থেকে পাওয়া results-এর সঙ্গে এই gold-standard resources 
+compare করা হবে।
+
+Search Results → Compare with Gold Standard → Calculate Score
+
+এভাবে শুধু web search-এর quality measure করা যায়।
+
+এখানে F1 score-এর মতো standard information-retrieval metrics ব্যবহার করা যেতে পারে। তোমার এখন 
+F1 score-এর বিস্তারিত জানা প্রয়োজন নেই; lesson-এর মূল point হলো, এমন standard metrics আছে 
+যেগুলো দিয়ে returned search results এবং expert-selected gold-standard resources-এর overlap 
+measure করা যায়।
+
+এরপর web search component-এর বিভিন্ন parameters / hyperparameters পরিবর্তন করে খুব দ্রুত পরীক্ষা 
+করা যায়।
+
+যেমন:
+
+Search Engine:
+Google → Bing → অন্য search engines
+
+Number of Results:
+5 → 10 → 20
+
+Date Range:
+Last 1 month → Last 1 year → All time
+
+প্রতিবার পুরো research agent চালানোর দরকার নেই। শুধু web search component চালিয়ে দেখা যায় কোন 
+
+configuration-এ search quality ভালো হচ্ছে।
+
+এতে improvement অনেক দ্রুত measure করা যায়।
+
+তবে এখানে একটি গুরুত্বপূর্ণ বিষয় আছে: Component-level eval end-to-end eval-এর replacement নয়।
+
+প্রথমে component-level eval দিয়ে web search ভালোভাবে tune করা যায়:
+
+Change Search Configuration → Component Eval → Compare Score → Improve
+
+কিন্তু শেষে পুরো workflow-এর performance সত্যিই improve হয়েছে কি না নিশ্চিত করার জন্য আবার end-to-end 
+eval চালাতে হবে।
+
+অর্থাৎ:
+
+Component-Level Eval → Fast, focused improvement
+
+End-to-End Eval → Final overall system validation
+
+Component-level eval-এর আরেকটি বড় সুবিধা হলো noise কমানো। পুরো agentic workflow অনেক complex 
+হলে একটি component সামান্য improve করলেও অন্য component-এর randomness-এর কারণে final score-এ 
+সেই improvement দেখা নাও যেতে পারে। Component-level eval শুধু যে component নিয়ে কাজ করছো সেটার 
+quality measure করে, তাই signal অনেক clearer হয়।
+
+এটি team development-এর ক্ষেত্রেও useful। ধরো একটি team শুধু web search নিয়ে কাজ করছে এবং অন্য 
+team LLM summarization নিয়ে কাজ করছে। Web-search team-এর নিজের একটি clear metric থাকলে তারা 
+অন্য component-এর performance নিয়ে চিন্তা না করে নিজেদের component optimize করতে পারে।
+
+সবচেয়ে সহজভাবে মনে রাখো:
+
+Error Analysis → কোন component improve করতে হবে তা identify করো
+
+Component-Level Eval → সেই component-এর quality আলাদাভাবে measure করো
+
+Tune Parameters → component improve করো
+
+End-to-End Eval → পুরো system সত্যিই ভালো হয়েছে কি না verify করো
+
+এই lesson-এর core idea:
+
+When you decide to improve one component of a complex agentic workflow, a 
+component-level eval can give you a faster and clearer signal than repeatedly 
+running the entire end-to-end workflow.
+
+নতুন Technical Terms:
+
+Component-Level Eval → পুরো system নয়, একটি নির্দিষ্ট component-এর performance measure করার eval।
+Gold-Standard Web Resources → expert দ্বারা আগে থেকে নির্ধারিত authoritative/useful web resources।
+Information Retrieval → প্রয়োজনীয় information/source খুঁজে বের করার process।
+F1 Score → search/retrieval result কতটা ভালো তা measure করার একটি standard metric।
+Overlap → দুইটি result set-এর মধ্যে কতগুলো একই/মিল আছে।
+Parameter → system-এর কোনো configurable value যা পরিবর্তন করা যায়।
+Hyperparameter → system/model-এর behavior control করার configuration value, যা tuning-এর সময় পরিবর্তন করা হয়।
+Incremental Improvement → ধাপে ধাপে ছোট ছোট improvement।
+Noise → অন্য component-এর randomness/error-এর কারণে আসল improvement পরিষ্কারভাবে বোঝা না যাওয়া।
+Signal → evaluation থেকে পাওয়া useful/clear indication যে performance improve বা worsen হয়েছে।
+Tune / Tuning → parameters পরিবর্তন করে performance improve করার চেষ্টা।
+End-to-End Eval → user input থেকে final output পর্যন্ত পুরো workflow evaluate করা।
+Component-wise Eval → প্রতিটি নির্দিষ্ট component-এর জন্য আলাদা evaluation ব্যবহার করা।
+Authoritative Source → trusted এবং reliable information source।

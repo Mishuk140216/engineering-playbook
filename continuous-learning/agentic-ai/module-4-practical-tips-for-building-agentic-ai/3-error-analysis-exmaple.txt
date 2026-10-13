@@ -1,0 +1,112 @@
+এই lesson-এর মূল বিষয় হলো Error Analysis-এর আরও দুইটি practical example দেখে বোঝা—একটি 
+workflow-এ অনেক component থাকলে কোন component-এর কারণে সবচেয়ে বেশি error হচ্ছে তা কীভাবে 
+identify করতে হয়। শুধু final output খারাপ দেখেই কোনো component improve করা উচিত নয়; বরং 
+failed examples → component-by-component analysis → error count → priority এইভাবে 
+সিদ্ধান্ত নেওয়া উচিত।
+
+প্রথম example হলো Invoice Processing। Workflow ছিল:
+
+Invoice PDF → PDF-to-Text → LLM Data Extraction → Required Fields → Database
+
+এখানে system-এর একটি common problem ছিল invoice-এর due date ভুল extract করা। এখন প্রশ্ন হলো, 
+ভুলটি কোথায় হচ্ছে?
+
+PDF-to-text কি date-টাই ভুলভাবে extract করছে?
+নাকি PDF-to-text ঠিক আছে, কিন্তু LLM ভুল date বেছে নিচ্ছে?
+যেমন invoice-এ invoice date এবং due date দুটোই আছে, কিন্তু LLM ভুল করে invoice date নিয়ে নিচ্ছে।
+
+Error analysis করার জন্য প্রথমে যেসব invoice-এ due date ভুল হয়েছে, সেগুলো সংগ্রহ করা হয়। 
+এখানে correct examples বাদ দিয়ে problematic examples-এর দিকে focus করা হয়। 
+Transcript অনুযায়ী প্রায় 10–100টি ভুল invoice নিয়ে analysis করা যেতে পারে।
+
+তারপর একটি spreadsheet-এর মতো করে প্রতিটি error classify করা যায়:
+
+Invoice	PDF-to-Text Error	LLM Extraction Error
+1	No	Yes
+2	Yes	No
+3	No	Yes
+4	No	Yes
+
+যদি দেখা যায় PDF-to-text-এর তুলনায় LLM data extraction অনেক বেশি error করছে, তাহলে development 
+effort LLM extraction-এর দিকে দেওয়া উচিত।
+
+এটা খুব গুরুত্বপূর্ণ কারণ যদি error analysis না করা হয়, তাহলে developer হয়তো কয়েক সপ্তাহ বা কয়েক মাস 
+PDF-to-text component tune করতে পারে, অথচ আসল problem ছিল LLM-এর extraction logic। ফলে 
+অনেক development effort নষ্ট হতে পারে।
+
+আরেকটি গুরুত্বপূর্ণ point হলো, এই error percentages-এর যোগফল 100% হওয়া বাধ্যতামূলক নয়। কারণ একই 
+error example-এ একাধিক component-এর সমস্যা থাকতে পারে। অর্থাৎ errors mutually exclusive নয়।
+
+Mutually exclusive → দুটি category এমন যেখানে একই example একই সময়ে দুটিতে থাকতে পারে না।
+
+এখানে তা নয়। একটি invoice-এ PDF-to-text কিছুটা ভুল করতে পারে এবং একই সঙ্গে LLM-ও ভুল extraction 
+করতে পারে। তাই percentages overlap করতে পারে।
+
+দ্বিতীয় example হলো Customer Email Response Workflow।
+
+Workflow:
+
+Customer Email → LLM বুঝবে কী চাওয়া হয়েছে → Database Query তৈরি → Database থেকে Order Information
+ → LLM Email Draft → Human Review
+
+এখানে final email ভুল হলে একাধিক কারণ থাকতে পারে:
+
+LLM ভুল database query লিখেছে
+→ সঠিক customer/order information পাওয়া যায়নি।
+Database-এর data ভুল/corrupted
+→ LLM-এর query ঠিক ছিল, কিন্তু database-এ correct information ছিল না।
+LLM সঠিক customer information পেয়েছে, কিন্তু ভুল email লিখেছে
+→ information ঠিক, কিন্তু final response-এর quality খারাপ।
+
+তাই আবার failed emails সংগ্রহ করে প্রতিটি component-এর error আলাদা করে count করতে হবে।
+
+ধরো analysis-এর পরে দেখা গেল:
+
+Database Query → সবচেয়ে বেশি error
+Final Email Writing → দ্বিতীয় বেশি error
+Database Data → কিছু error
+
+যদি দেখা যায় overall errors-এর 75% database query generation থেকে, তাহলে প্রথম priority হওয়া উচিত 
+LLM কীভাবে SQL/database query লিখছে সেটা improve করা। এরপর final email generation-এর 
+prompting improve করা যেতে পারে।
+
+এটাই error analysis-এর আসল value:
+
+অনেক component → অনেক possible problems → Error Analysis → কোন component সবচেয়ে বেশি 
+responsible তা জানা → Development priority ঠিক করা
+
+আর lesson-এর শেষে একটি নতুন গুরুত্বপূর্ণ concept introduce করা হয়েছে: শুধু end-to-end eval করলেই 
+সবসময় যথেষ্ট নয়। যদি error analysis বলে যে একটি particular component-এ সমস্যা বেশি, তাহলে সেই 
+component-এর জন্য আলাদা করে component-level eval তৈরি করা useful হতে পারে। এতে পুরো system 
+বারবার evaluate না করে যে component improve করতে চাইছো সেটিকে directly measure করা যায়। পরের 
+lesson-এ এই বিষয়টি বিস্তারিত আসবে।
+
+সহজভাবে পুরো lesson মনে রাখো:
+
+Final output খারাপ → শুধু final output দেখো না → failed examples সংগ্রহ করো → প্রতিটি component 
+check করো → error count করো → সবচেয়ে বেশি error করা component identify করো → সেই component-এর 
+improvement-এ focus করো → component-level eval দিয়ে improvement measure করো।
+
+Interview-এর জন্য:
+
+“I use error analysis to identify which component contributes most to the system’s 
+failures. I inspect failed examples and traces, categorize errors by component, and use 
+the error distribution to prioritize development. Once a problematic component is 
+identified, I can create a component-level evaluation to measure improvements more 
+efficiently.”
+
+নতুন Technical Terms:
+
+Component-level Error Analysis → workflow-এর প্রতিটি component আলাদাভাবে examine করে কোথায় 
+error হচ্ছে তা বের করা।
+PDF-to-Text → PDF-এর content/text বের করে আনার process।
+Data Extraction → input থেকে প্রয়োজনীয় information বের করা।
+Error Categorization → error-গুলোকে কোন component-এর কারণে হয়েছে তা অনুযায়ী ভাগ করা।
+Error Distribution → কোন component কত শতাংশ error-এর জন্য responsible তার distribution।
+Mutually Exclusive → একই example একই সময়ে দুই category-তে থাকতে পারে না।
+Corrupted Data → database-এর ভুল বা damaged information।
+Database Query → database থেকে নির্দিষ্ট information বের করার instruction/query।
+SQL Query → SQL language ব্যবহার করে database-কে data retrieve/change করার instruction।
+Component-level Eval → পুরো workflow নয়, একটি নির্দিষ্ট component-এর performance measure করার evaluation।
+End-to-end Eval → user input থেকে final output পর্যন্ত পুরো workflow evaluate করা।
+Development Priority → কোন component আগে improve করা উচিত তার সিদ্ধান্ত।

@@ -1,6 +1,106 @@
-Module 4: Memory and Evaluation
+এই lesson-এর মূল idea হলো: Agentic AI workflow বানানোর সময় শুরুতেই সবকিছু perfect করার চেষ্টা না করে,
+ আগে একটি ছোট prototype বানিয়ে চালাও → output দেখো → কোথায় সমস্যা হচ্ছে খুঁজে বের করো → 
+ সেই specific সমস্যার জন্য eval বানাও → improvement measure করো → তারপর system ও eval 
+ দুটোই ধীরে ধীরে উন্নত করো। Andrew Ng এখানে বিশেষভাবে বলছেন, অনেক সপ্তাহ শুধু theory নিয়ে চিন্তা 
+ করার চেয়ে একটি quick and dirty prototype বানিয়ে বাস্তবে কোথায় failure হচ্ছে সেটা দেখা বেশি কার্যকর। 
+ তবে prototype অবশ্যই safe এবং responsible হতে হবে, যেমন data leak না করা।
 
-Notes:
-- Memory patterns and context retention.
-- Evaluation methods for agent performance.
-- Key takeaways from the lesson.
+Invoice processing-এর example-এ system চারটি required field extract করে database-এ save করে। 
+প্রথমে ১০–২০টি invoice দেখে manually output inspect করা হয়। যদি দেখা যায় অনেক invoice-এ invoice 
+date আর due date গুলিয়ে ফেলছে, তাহলে বোঝা যায় এটি একটি common error mode। তখন পুরো system-এর 
+সবকিছু evaluate করার দরকার নেই; বরং due-date extraction-এর জন্য একটি targeted eval বানানো বেশি 
+useful।
+
+এরপর ১০–২০টি invoice নিয়ে প্রত্যেকটির আসল due date manually লিখে রাখা হয়। এটিই ground truth। 
+যেমন 2025-08-20। LLM-কেও একই format-এ date দিতে বলা হয়। তারপর code/regex দিয়ে LLM-এর output 
+থেকে date বের করে ground truth-এর সঙ্গে compare করা হয়। কত শতাংশ invoice-এ সঠিক date এসেছে 
+সেটাই accuracy metric। Prompt বা system পরিবর্তন করার পর এই metric বাড়ছে কি না দেখে improvement 
+measure করা যায়।
+
+এখানে সবচেয়ে important workflow হলো:
+
+Build system → Inspect output → Find problem → Create small eval → Improve system → 
+Run eval again
+
+প্রথমে ২০টি example যথেষ্ট হতে পারে। পরে যদি বোঝা যায় এগুলো সব ধরনের case cover করছে না, 
+তাহলে eval set বড় করতে হবে। অর্থাৎ eval-ও system-এর মতো সময়ের সাথে improve করতে হয়।
+
+দ্বিতীয় example হলো marketing caption assistant। Product-এর image দেখে caption তৈরি করতে হবে এবং 
+rule হলো maximum 10 words। যদি sunglasses-এর caption 17 words, shirt-এর caption 14 words, 
+blender-এর caption 11 words হয়, তাহলে problem হলো output length ঠিক রাখা যাচ্ছে না। এখানে ১০–২০টি 
+example নিয়ে Python/code দিয়ে প্রতিটি generated caption-এর word count বের করা যায় এবং 10-এর মধ্যে 
+আছে কি না check করা যায়।
+
+Invoice example আর marketing example-এর গুরুত্বপূর্ণ difference হলো per-example ground truth। 
+Invoice-এর ক্ষেত্রে প্রতিটি invoice-এর correct due date আলাদা, তাই প্রতিটির জন্য আলাদা ground truth 
+দরকার। কিন্তু marketing caption-এর ক্ষেত্রে প্রত্যেক example-এর target একই: 10 words or fewer। 
+তাই এখানে per-example ground truth দরকার নেই।
+
+তৃতীয় example হলো research agent। ধরো AI-কে black hole research বা fruit-harvesting robotics 
+নিয়ে article লিখতে বলা হলো। Output দেখে বোঝা গেল, কখনো গুরুত্বপূর্ণ একটি বিষয় বাদ পড়ে যাচ্ছে। তখন প্রতিটি 
+topic-এর জন্য ৩–৫টি gold-standard talking points define করা যায়। এরপর LLM judge দিয়ে check 
+করা যায় article-এর মধ্যে কতগুলো important point এসেছে।
+
+এখানে সাধারণ regex বা simple pattern matching ভালো কাজ নাও করতে পারে, কারণ একই idea অনেকভাবে 
+লেখা যায়। তাই LLM judge ব্যবহার করা হয়। যেমন একই গুরুত্বপূর্ণ বিষয় দুইজন লেখক completely different 
+wording-এ লিখতে পারেন, কিন্তু meaning একই হতে পারে। এজন্য এই evaluation কিছুটা subjective।
+
+এই lesson-এর একটি খুব useful concept হলো 2×2 eval framework। Evaluation-কে দুইটি প্রশ্ন দিয়ে ভাবা যায়:
+
+Output evaluate করতে code/objective method ব্যবহার করছি, নাকি LLM judge/subjective method?
+প্রতিটি example-এর জন্য কি ground truth আছে, নাকি নেই?
+
+তাহলে চারটি combination হয়:
+
+Evaluation method	Ground truth	Example
+Code / Objective	আছে	Invoice due date
+Code / Objective	নেই	Caption ≤ 10 words
+LLM Judge / Subjective	আছে	Research article-এর gold-standard points
+LLM Judge / Subjective	নেই	Chart quality with rubric
+
+এই চার ধরনের evaluation-ই end-to-end eval হতে পারে, কারণ এগুলো user-এর initial prompt থেকে শুরু 
+করে final output পর্যন্ত পুরো system-এর performance evaluate করে।
+
+সবশেষে Andrew Ng-এর practical advice হলো, eval বানানোর জন্য development বন্ধ করে বসে থেকো না। 
+প্রথমে ১০, ১৫ বা ২০টি example দিয়ে simple eval শুরু করাই ভালো। Human চোখে output inspect করার সঙ্গে 
+metric-based evaluation combine করো। পরে system বড় হলে eval set এবং evaluation method দুটোই 
+আরও sophisticated করা যায়।
+
+আরেকটি important point: যদি তুমি system improve করার পর human হিসেবে clearly মনে করো output 
+ভালো হয়েছে, কিন্তু eval score বাড়ছে না, তাহলে system-এর improvement নিয়ে সন্দেহ করার আগে eval-টাই 
+পরীক্ষা করো। হয়তো eval set খুব ছোট, অথবা evaluation method আসল quality ঠিকভাবে measure করছে না। তখন eval set বড় করতে হবে অথবা evaluation method পরিবর্তন করতে হবে।
+
+শেষ পর্যন্ত eval-এর সবচেয়ে বড় ব্যবহার হলো কোথায় development effort দেওয়া উচিত সেটা খুঁজে বের করা। 
+Agentic workflow-এ অনেক component থাকতে পারে। তাই কোন component-এ কাজ করলে সবচেয়ে বেশি improvement পাওয়া যাবে, সেটি identify করার জন্য eval খুব গুরুত্বপূর্ণ। বিশেষ করে যেখানে AI-এর performance একজন expert human-এর চেয়ে খারাপ, সেসব জায়গা improvement-এর priority হতে পারে।
+
+Interview-এর জন্য মনে রাখার মতো answer:
+
+“When building an agentic AI workflow, I would first create a quick prototype, 
+inspect its outputs, identify common failure modes, and then build targeted evaluations 
+for the problematic areas. I would use objective code-based evaluations when possible 
+and LLM-as-a-judge for more subjective tasks. The evaluation set should evolve as the 
+system improves.”
+
+নতুন Technical Terms:
+
+Quick and Dirty Prototype → দ্রুত বানানো initial working version; perfect না হলেও সমস্যা 
+বোঝার জন্য useful।
+Prototype → system-এর প্রাথমিক working version।
+Error Mode / Failure Mode → system যেভাবে বারবার ভুল করছে।
+Eval / Evaluation → system কত ভালো কাজ করছে তা measure করার পদ্ধতি।
+Eval Set / Evaluation Set → evaluation-এর জন্য রাখা test examples-এর collection।
+Ground Truth → কোনো example-এর আসল/correct answer।
+Per-example Ground Truth → প্রতিটি example-এর জন্য আলাদা correct answer।
+Annotation → মানুষের দ্বারা আগে থেকে correct information/label লিখে রাখা।
+Accuracy → কত শতাংশ output correct হয়েছে।
+Metric → performance মাপার numerical measurement।
+Objective Eval → clear rule দিয়ে code-এর মাধ্যমে objectively correct/incorrect determine করা।
+Subjective Eval → quality বিচার করতে human-like judgment দরকার হয়।
+LLM Judge → একটি LLM-কে অন্য LLM-এর output evaluate করতে ব্যবহার করা।
+Gold Standard → কোনো task-এর জন্য expert-accepted important/correct information।
+Gold-standard Talking Points → article/topic-এ অবশ্যই থাকা উচিত এমন গুরুত্বপূর্ণ points।
+Rubric → output বিচার করার নির্দিষ্ট criteria বা rules-এর তালিকা।
+End-to-end Eval → user input থেকে final output পর্যন্ত পুরো workflow evaluate করা।
+Error Analysis → system কোথায় এবং কীভাবে ভুল করছে তা বিশ্লেষণ করা।
+Evaluation Set Expansion → সময়ের সাথে আরও examples যোগ করে eval set বড় করা।
+Representative Eval Set → বাস্তবের বিভিন্ন ধরনের case ভালোভাবে represent করে এমন test set।

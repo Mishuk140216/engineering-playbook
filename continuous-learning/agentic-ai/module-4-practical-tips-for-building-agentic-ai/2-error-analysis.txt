@@ -1,0 +1,106 @@
+এই lesson-এর মূল idea হলো Error Analysis। Agentic AI workflow-এ অনেকগুলো component/step থাকে, 
+তাই system খারাপ করলে শুধু অনুমান করে কোনো একটি component ঠিক করা উচিত নয়। বরং কোন component 
+আসলে বেশি ভুল করছে → সেই component-এ improvement-এর সুযোগ কতটা → কোথায় কাজ করলে overall 
+performance সবচেয়ে বেশি বাড়বে—এগুলো systematicভাবে বের করতে হবে। Andrew Ng বলছেন, এই disciplined 
+error analysis একটি team কত efficiently system improve করতে পারে তার জন্য খুব গুরুত্বপূর্ণ।
+
+আগের research-agent example-এ দেখা গিয়েছিল AI article লেখার সময় গুরুত্বপূর্ণ কিছু point miss করছে। 
+কিন্তু এই problem-এর কারণ একটাই নাও হতে পারে। যেমন:
+
+LLM → Search Terms → Web Search → Search Results → Best Sources নির্বাচন → Web Fetch → Final 
+LLM
+
+যেকোনো জায়গায় সমস্যা হতে পারে।
+
+LLM ভালো search terms তৈরি না করলে → ভুল information search হবে।
+Search engine ভালো result না দিলে → ভালো source পাওয়া যাবে না।
+Search result ভালো হলেও LLM যদি ভুল পাঁচটি source select করে → final research খারাপ হতে পারে।
+Web pages ভালোভাবে fetch হলেও LLM যদি document-এর important information ignore করে → 
+final answer খারাপ হবে।
+
+তাই শুধু final answer দেখে কোন component দোষী তা বলা কঠিন।
+
+এখানে Trace খুব important। একটি agent পুরো workflow চালানোর সময় প্রতিটি intermediate step-এর যে 
+output তৈরি করে, সবগুলো মিলে একটি trace। আর একটি নির্দিষ্ট step-এর output-কে span বলা হতে পারে। 
+সহজভাবে:
+
+পুরো workflow-এর সব intermediate outputs → Trace
+
+একটি নির্দিষ্ট step-এর intermediate output → Span
+
+Andrew Ng course-এ “trace” term-টাই বেশি ব্যবহার করছেন।
+
+ধরো research agent black hole science নিয়ে article লিখছে। প্রথমে generated search terms দেখলে 
+expert বলতে পারে, “হ্যাঁ, এগুলো reasonable।” এরপর search results দেখলে দেখা গেল অনেক blog বা 
+popular-news article এসেছে, কিন্তু scientific paper খুব কম। তখন বোঝা যায় problem সম্ভবত search 
+result quality-তে। অর্থাৎ trace-এর intermediate outputs দেখে আমরা step-by-step বুঝতে পারি কোথায় 
+quality কমছে।
+
+আরও systematic হতে হলে শুধু “আমার মনে হচ্ছে search খারাপ” বলা যথেষ্ট নয়। বরং যেসব case-এ final 
+output খারাপ হয়েছে, সেগুলো আলাদা করে নিয়ে প্রতিটি component পরীক্ষা করা যায় এবং spreadsheet-এ record 
+রাখা যায়।
+
+
+যদি দেখা যায় Search Results 45% সময় problematic, কিন্তু Search Terms মাত্র 5% সময় problematic, 
+তাহলে search engine বা তার parameters নিয়ে কাজ করা বেশি যুক্তিযুক্ত হতে পারে।
+
+তবে একটি খুব important বিষয় হলো blame করার আগে input quality দেখতে হবে।
+
+ধরো search engine ১০টি article দিয়েছে, কিন্তু সবগুলোই low-quality blog। এরপর LLM-কে বলা হলো ওই 
+১০টি থেকে best 5টি select করতে। LLM যে ৫টি select করেছে সেগুলো ভালো না হলেও, এখানে necessarily 
+source-selection component-এর fault নয়। কারণ তাকে যদি ভালো source-ই দেওয়া না হয়, তাহলে সে একই 
+input থেকে যতটা সম্ভব ভালো selection করেছে।
+
+অর্থাৎ error analysis করার সময় প্রতিটি component-এর input এবং output দুটোই দেখতে হবে।
+
+এই lesson-এর সবচেয়ে practical idea হলো gut feeling দিয়ে component নির্বাচন না করা। অনেক team 
+এমন করে—“মনে হচ্ছে prompt problem, তাই prompt ঠিক করি।” তারপর কয়েক সপ্তাহ বা মাস কাজ করার পরও 
+overall performance খুব একটা improve করে না।
+
+তার বদলে:
+
+Final Output খারাপ → Error Cases সংগ্রহ → Trace দেখো → প্রতিটি Component evaluate করো → Error 
+Count করো → সবচেয়ে problematic component identify করো → Improvement opportunity দেখো → 
+Priority ঠিক করো
+
+এভাবে কাজ করলে development effort অনেক বেশি focused হয়।
+
+আর শুধু error frequency দেখলেই হবে না। Improvement করার practical idea আছে কি না সেটাও দেখতে হবে।
+
+উদাহরণ:
+
+Component A → 40% error, কিন্তু কীভাবে improve করবে জানা নেই।
+Component B → 30% error, এবং search parameters/prompt পরিবর্তন করে improve করার clear idea আছে।
+
+তাহলে Component B-তে আগে কাজ করা reasonable হতে পারে। অর্থাৎ priority নির্ধারণে error frequency + 
+improvement opportunity দুটোই গুরুত্বপূর্ণ।
+
+সবচেয়ে সহজভাবে এই lesson মনে রাখো:
+
+Agent খারাপ করছে → শুধু final answer দেখো না → Trace দেখো → প্রতিটি step-এর output দেখো → কোন 
+component বেশি ভুল করছে measure করো → যেখানে improvement-এর ভালো সুযোগ আছে সেখানে আগে কাজ করো।
+
+Interview-এর জন্য:
+
+“Error analysis helps identify which component of an agentic workflow is responsible for 
+poor performance. I would inspect traces and intermediate outputs, focus on failed cases, 
+measure errors across components, and prioritize the components with frequent errors and 
+good opportunities for improvement.”
+
+নতুন Technical Terms:
+
+Error Analysis → system কোথায় এবং কেন ভুল করছে তা systematicভাবে বিশ্লেষণ করা।
+Trace → একটি agent run-এর সব intermediate step-এর outputs-এর collection।
+Span → একটি নির্দিষ্ট step-এর intermediate output।
+Intermediate Output → final answer-এর আগে workflow-এর কোনো step থেকে পাওয়া output।
+Component → agentic workflow-এর একটি নির্দিষ্ট অংশ/step।
+Subpar Performance → expected quality-এর তুলনায় noticeably খারাপ performance।
+Search Terms → search engine-এ information খোঁজার জন্য ব্যবহৃত keywords/queries।
+Source Selection → অনেক search result থেকে গুরুত্বপূর্ণ/ভালো source নির্বাচন করা।
+Web Fetch → selected web page-এর actual content সংগ্রহ করা।
+Error Frequency → কোনো component কত ঘন ঘন ভুল করছে।
+Gut Feeling → data/measurement-এর বদলে নিজের অনুমানের ভিত্তিতে decision নেওয়া।
+Prioritize → কোন কাজটি আগে করা সবচেয়ে গুরুত্বপূর্ণ তা নির্ধারণ করা।
+Observability → system-এর ভিতরে কী ঘটছে তা intermediate outputs/traces দেখে বুঝতে পারার capability।
+Error Case → যে input/run-এ system-এর output satisfactory হয়নি।
+Overall Performance → পুরো agentic system-এর final performance।
